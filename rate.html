@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hobby-ever</title>
+    </head>
+    <script type="text/javascript">
+        function signout(){
+            alert("Are you sure to sign out?");
+        }
+    </script>
+    <style>
+
+        #top{
+            background-color: white;
+            width: 100%;
+            height: 31px;
+            position: relative;
+        }
+        #top_content{
+            width: 1024px;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #top ul{
+            display: block;
+            width: 370px;
+            height: 30px;
+            float: right;
+            line-height: 30px;
+            margin-top: 0;
+        }
+        #top ul li{
+            float: left;
+            list-style: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+        }
+        #top ul li a{
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+        }
+        #signup, #login, #signout{
+            float: left;
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+            display: block;
+            width: 65px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+        #user{
+            float: left;
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+            display: block;
+            width: 150px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        #menu{
+            background-color: #162f59;
+            width: 100%;
+            height: 60px;
+        }
+        #menu_content{
+            width: 975px;
+            height: 60px;
+            line-height: 60px;
+            position: relative;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #menu_content ul{
+            display: block;
+            height: 30px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        #menu_content ul li{
+            float: left;
+            display: block;
+        }
+        #menu_content ul li a{
+            list-style: none;
+            text-decoration: none;
+            color: #f9fcfd;
+        }
+        #menu_homepage{
+            width: 100px;
+        }
+        #menu_match, #menu_search, #menu_personal, #menu_rate, #menu_course{
+            width: 75px;
+            text-align: center;
+        }
+
+        #title{
+            width: 800px;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #title p{
+            font-size: 36px;
+
+        }
+
+        #middle{
+            width: 100%;
+            height: 800px;
+            margin-top: 40px;
+            background: linear-gradient(to bottom,white,#e5f2f8);
+        }
+        #middle_content{
+            width: 800px;
+            height: 750px;
+            background: linear-gradient(to bottom,white,#e5f2f8);
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #middle_content table{
+            width: 460px;
+            height: 580px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            padding-top: 30px;
+        }
+        #middle_content tr{
+            margin-top: 8px;
+            display: block;
+        }
+        #middle_content tr td{
+            width: 475px;
+        }
+        #info{
+            width: 600px;
+            padding-left: 25px;
+            line-height: 20px;
+            font-size: 20px;
+        }
+        #quest, #answer{
+            padding-left: 25px;
+            height: 30px;
+            line-height: 20px;
+            font-size: 16px;
+        }
+        #quest{
+            padding-left: 25px;
+        }
+        #answer{
+            padding-left: 40px; 
+        }
+        #ra{
+            margin-left: 40px;
+            font-size: 16px;
+            text-align: center;
+        }
+        #comment{
+            margin-left: 25px;
+            width: 345px;
+            height: 100px;
+            line-height: 20px;
+            font-size: 16px;
+        }
+        #butto{
+            text-align: center;
+            padding-left: 30px;
+            padding-top: 75px;
+        }
+        #butto button{
+            width: 120px;
+            height: 30px;
+            font-size: 16px;
+        }
+
+        form.card{
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+
+    <body>
+
+    <div id = "top">
+        <div id = "top_content">
+            <ul>
+                <li id="signup"><a href="signup.html">Sign Up</a></li>
+                <li> / </li>
+                <li id="login"><a href="login.html">Log In</a></li>
+                <li> / </li>
+                <li id = "user">Welcome, <a href="personal.html">username</a></li>
+                <li> / </li>
+                <li id = "signout" onclick="signout()">Sign Out</li>
+            </ul>
+        </div>
+    </div>
+    <div id = "menu">
+        <div id = "menu_content">
+            <ul>
+                <li id="menu_homepage"><a href="main.html">Homepage</a></li>
+                <li id="menu_match"><a href="match.html">Match</a></li>
+                <li id = "menu_search"><a href="search.html">Search</a></li>
+                <li id = "menu_rate"><a href="rate.html">Rate</a></li>
+                <li id = "menu_course"><a href="course.html">Course</a></li>
+                <li id = "menu_personal"><a href="personal.html">Personal</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="title">
+        <p>Rate your paired-user</p>
+    </div>
+
+    <div id="middle">
+        <form id="middle_content" class="card">
+            <table>
+                <tr>
+                    <td id="info" colspan="2">Username</th>
+                </tr>
+                <tr>
+                    <td id="info">Subject: Basketball</td>
+                    <td id="info">Date: 2019-01-24</td>
+                </tr>
+                <tr style="margin-top:20px;"><td colspan="2">&nbsp;</td></tr>
+                <tr>
+                    <td id="quest" colspan="2">Q1. Is the course content match how your paired-user described?</td>
+                </tr>
+                <tr>
+                    <td id="answer" colspan="2">
+                        <label><input id="ra" name="question1" type="radio" value="1">1</label>
+                        <label><input id="ra" name="question1" type="radio" value="2">2</label>
+                        <label><input id="ra" name="question1" type="radio" value="3">3</label>
+                        <label><input id="ra" name="question1" type="radio" value="4">4</label>
+                        <label><input id="ra" name="question1" type="radio" value="5">5</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="quest" colspan="2">Q2. How would you rate your paired-user's ability in this aspect?</td>
+                </tr>
+                <tr>
+                    <td id="answer" colspan="2">
+                        <label><input id="ra" name="question2" type="radio" value="1">1</label>
+                        <label><input id="ra" name="question2" type="radio" value="2">2</label>
+                        <label><input id="ra" name="question2" type="radio" value="3">3</label>
+                        <label><input id="ra" name="question2" type="radio" value="4">4</label>
+                        <label><input id="ra" name="question2" type="radio" value="5">5</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="quest" colspan="2">Q3. How would you overall rate your paired-user?</td>
+                </tr>
+                <tr>
+                    <td id="answer" colspan="2">
+                        <label><input id="ra" name="question3" type="radio" value="1">1</label>
+                        <label><input id="ra" name="question3" type="radio" value="2">2</label>
+                        <label><input id="ra" name="question3" type="radio" value="3">3</label>
+                        <label><input id="ra" name="question3" type="radio" value="4">4</label>
+                        <label><input id="ra" name="question3" type="radio" value="5">5</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="quest" colspan="2">
+                        <p>Q4. Do you have any other comments about this user?</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="answer" colspan="2">
+                        <input id="comment" name="comments" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="butto"><button>Submit</button></td>
+                    <td id="butto"><button>Reset</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+
+</body>
+</html>

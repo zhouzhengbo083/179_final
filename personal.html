@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hobby-ever</title>
+    </head>
+    <script type="text/javascript">
+        function signout(){
+            alert("Are you sure to sign out?");
+        }
+    </script>
+    <style>
+
+        #top{
+            background-color: white;
+            width: 100%;
+            height: 31px;
+            position: relative;
+        }
+        #top_content{
+            width: 1024px;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #top ul{
+            display: block;
+            width: 370px;
+            height: 30px;
+            float: right;
+            line-height: 30px;
+            margin-top: 0;
+        }
+        #top ul li{
+            float: left;
+            list-style: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+        }
+        #top ul li a{
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+        }
+        #signup, #login, #signout{
+            float: left;
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+            display: block;
+            width: 65px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+        #user{
+            float: left;
+            list-style: none;
+            text-decoration: none;
+            color: rgb(110, 110, 110);
+            font-size: 14px;
+            display: block;
+            width: 150px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        #menu{
+            background-color: #162f59;
+            width: 100%;
+            height: 60px;
+        }
+        #menu_content{
+            width: 975px;
+            height: 60px;
+            line-height: 60px;
+            position: relative;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #menu_content ul{
+            display: block;
+            height: 30px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        #menu_content ul li{
+            float: left;
+            display: block;
+        }
+        #menu_content ul li a{
+            list-style: none;
+            text-decoration: none;
+            color: #f9fcfd;
+        }
+        #menu_homepage{
+            width: 100px;
+        }
+        #menu_match, #menu_search, #menu_personal, #menu_rate, #menu_course{
+            width: 75px;
+            text-align: center;
+        }
+
+
+
+
+
+        #mask{
+            width: 300px;
+            height: 260px;
+        }
+
+
+    </style>
+
+    <body>
+
+    <div id = "top">
+        <div id = "top_content">
+            <ul>
+                <li id="signup"><a href="signup.html">Sign Up</a></li>
+                <li> / </li>
+                <li id="login"><a href="login.html">Log In</a></li>
+                <li> / </li>
+                <li id = "user">Welcome, <a href="personal.html">username</a></li>
+                <li> / </li>
+                <li id = "signout" onclick="signout()">Sign Out</li>
+            </ul>
+        </div>
+    </div>
+    <div id = "menu">
+        <div id = "menu_content">
+            <ul>
+                <li id="menu_homepage"><a href="main.html">Homepage</a></li>
+                <li id="menu_match"><a href="match.html">Match</a></li>
+                <li id = "menu_search"><a href="search.html">Search</a></li>
+                <li id = "menu_rate"><a href="rate.html">Rate</a></li>
+                <li id = "menu_course"><a href="course.html">Course</a></li>
+                <li id = "menu_personal"><a href="personal.html">Personal</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="username">
+        <p>Username</p>
+        <p onclick="changeUsername()">change</p>
+    </div>
+    <div id="middle">
+        <div id="middle_content">
+
+        </div>
+    </div>
+
+
+
+
+    <center id="mask">
+        <div id="updateName">
+            <div id="mask_title">
+                <h2>Change Username</h2>
+                <div id="exit" onclick="quit()" style="position:absolute;right:10px;top:0px;font-weight:bold; line-height: 50px;">X</div>
+            </div>           
+            <form>
+                <div>Current username</div>
+                <div id="oldName">username</div>
+
+                <div>Update to</div>
+                <div id="newName">newUsername</div>
+
+                <div id="mask_button">
+                    <input type="submit" value="Submit">
+                    <input type="button" value="cancel">
+                </div>
+            </form>
+        </div>
+    </center>
+
+
+</body>
+<script>
+
+    function changeUsername(){
+        $("#mask").fadeIn(600);
+    }
+	function quit(){
+		$("#mask").fadeOut(1000);
+	}
+</script>
+</html>
