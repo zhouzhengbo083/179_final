@@ -3,11 +3,20 @@
     <head>
         <title>Hobby-ever</title>
     </head>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <script type="text/javascript">
         function signout(){
             alert("Are you sure to sign out?");
         }
-    </script>
+        function remove_skill(){
+            alert("Are you sure to remove this skill?");
+        }
+        function remove_interest(){
+            alert("Are you sure to remove this interest?");
+        }
+    </script> 
     <style>
 
         #top{
@@ -109,15 +118,550 @@
         }
 
 
+        #title{
+            width: 100%;
+            height: 60px;
+
+        }
+        #title_content{
+            width: 900px;
+            height: 60px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #title_welcome{
+            width: 250px;
+            height: 60px;
+            line-height: 60px;
+            display: block;
+        }
+
+        #middle{
+            width: 100%;
+            height: 1000px;
+            background: linear-gradient(to bottom,white,#e5f2f8);
+        }
+        #middle_content{
+            width: 900px;
+            height: 900px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #tab{
+            width: 900px;
+            height: 900px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #tab_title{
+            height: 35px;
+            width: 770px;
+            margin-left: 65px;
+            padding-left: -5px;
+            padding-top: 15px;
+            border-bottom: 1px solid #162f59;
+        }
+        #tab_title span{
+            font-size: 18px;
+            font-weight: 1;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 8px;
+            height: 35px;
+            line-height: 35px;
+            float: left;
+            display: block;
+        }
+        #tab_content{
+            list-style: none;
+            width: 750px;
+            height: 750px;
+            padding-left: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            display: block;
+            border: 1px dashed #b2b2b2;
+        }
+        #tab_info, #tab_video, #tab_calendar, #tab_course{
+            display: block;
+            width: 600px;
+            height: 800px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            position: relative;
+            padding-top: 5px;
+        }
+        #tab_info table tr td{
+            text-align: left;
+            margin-top: 0;
+            display: block;
+            float: left;
+        }
+        #info_title{
+            width: 120px;
+            height: 30px;
+            line-height: 60px;
+            display: block;
+            font-size: 18px;
+            margin-left: 115px;
+        }
+        #info_username, #info_credit{
+            width: 175px;
+            height: 30px;
+            line-height: 60px;
+            display: block;
+            font-size: 18px;
+            margin-left: 3px;
+        }
+        #info_username_modify{
+            width: 75px;
+            height: 30px;
+            line-height: 60px;
+            display: block;
+            text-decoration: underline;
+            text-align: right;
+        }
+        #info_skill, #info_interest{
+            width: 300px;
+            line-height: 30px;
+            display: block;
+            font-size: 18px;
+        }
+        #info_skill_table{
+            margin-top: 12px;
+            width: 300px;
+        }
+        #info_interest_table{
+            margin-top: 20px;
+            width: 300px;
+        }
+        #info_skill_table table tr, #info_interest_table table tr{
+            display: block;
+            width: 300px;
+            height: 30px;
+        }
+        #info_skill_title, #info_interest_title{
+            display: block;
+            width: 170px;
+            height: 30px;
+            margin-left: 0;
+        }
+        #info_skill_button, #info_skill_add_button, #info_interest_button, #info_interest_add_button{
+            margin-right: 20px;
+            width: 60px;
+            height: 30px;
+            display: block;
+        }
+        #info_skill_button input, #info_skill_add_button input, #info_interest_button input, #info_interest_add_button input{
+            width: 60px;
+            height: 30px;
+            display: block;
+            margin-top: 5px;
+        }
+        #info_skill_add_input, #info_interest_add_input{
+            display: block;
+            width: 170px;
+            height: 30px;
+            margin-left: 0;
+        }
+        #info_skill_add_input input, #info_interest_add_input input{
+            display: block;
+            width: 150px;
+            height: 20px;
+            margin-left: 0;
+            margin-top: 3px;
+            border-radius: 3px;
+            border: 1px solid #b2b2b2;
+        }
+
+        #separate{
+            border-bottom: 1px solid #b2b2b2;
+            width: 600px;
+            height: 65px;
+        }
+
+
+        #info_table{
+            width: 600px;
+            margin-top: 15px;
+        }
+        #info_table tr{
+            margin-top: 8px;
+            display: block;
+            height: 40px;
+            width: 600px;
+        }
+        #info_table table tr td{
+            text-align: left;
+            display: block;
+            float: left;
+        }
+        #info_gender, #info_phone, #info_email{
+            width: 200px;
+            height: 30px;
+            line-height: 60px;
+            display: block;
+            font-size: 18px;
+        }
+        #phone_input, #email_input{
+            width: 230px;
+            height: 24px;
+            font-size: 14px;
+            margin-left: 2px;
+        }
+        #info_submit{
+            width: 120px;
+            height: 30px;
+            line-height: 60px;
+            float: left;
+            display: block;
+            font-size: 18px;
+            margin-left: 180px;
+            text-align: right;
+        }
+        #info_reset{
+            width: 120px;
+            height: 30px;
+            float: left;
+            line-height: 60px;
+            display: block;
+            margin-left: 30px;
+        }
+        #info_submit input, #info_reset input{
+            width: 75px;
+            height: 30px;
+            display: block;
+            margin-top: 45px;
+            margin-left: 20px;
+            font-size: 13px;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+
+
+        #video_table{
+            margin-top: 20px;
+        }
+        #video_table tr td{
+            text-align: left;
+            margin-top: 0;
+            display: block;
+            float: left;
+        }
+        #video, #add_video{
+            width: 275px;
+            height: 125px;
+            border: 1px solid #b2b2b2; 
+        }
+        #add_video p{
+            width: 275px;
+            height: 125px;
+            font-size: 50px;
+            font-weight: 1px;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 125px;
+            padding-top: 0;
+            margin-top: 0;
+            color: #b2b2b2;
+            text-align: center;
+            display: block;
+        }
+
+        #tab_calendar{
+            padding-top: 30px;
+        }
+        #calendar{
+            margin-top: 20px;
+            width: 575px;
+            height: 375px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+            margin-bottom: 30px;
+        }
+        #event_list{
+            margin-top: 20px;
+            width: 575px;
+            height: 275px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+        #event_list_table{
+            width: 575px;
+            height: 250px;
+            margin-top:15px;
+        }
+        #event_list_table tr{
+            display: block;
+            height: 38px;
+            width: 575px;
+        }
+        #event_list_table tr td{
+            float: left;
+        }
+        #event_title{
+            display: block;
+            width: 90px;
+            height: 30px;
+            margin-left: 15px;
+            line-height: 30px;
+        }
+        #event_start_date, #event_end_date{
+            display: block;
+            width: 155px;
+            height: 30px;
+            margin-left: 8px;
+            line-height: 30px;
+        }
+        #event_connect{
+            display: block;
+            width: 15px;
+            height: 30px;
+            margin-left: 12px;
+            line-height: 30px;
+        }
+        #event_button{
+            display: block;
+            width: 80px;
+            height: 30px;
+            float: left;
+            line-height: 30px;
+            margin-left: 12px;
+        }
+        #event_button input{
+            width: 75px;
+            height: 24px;
+            display: block;
+            font-size: 13px;
+            margin-top: 3px;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+        #event_page{
+            display: block;
+            width: 460px;
+            height: 30px;
+            margin-left: 15px;
+            line-height: 30px;
+        }
+        #page_box{
+            width: 460px;
+            height: 30px;
+            text-align: center;
+            margin-left: 200px;
+            margin-top: 30px;
+        }
+        #page{
+            width: 125px;
+            height: 30px;
+            display: block;
+        }
+        #page input{
+            width: 15px;
+            height: 8px;
+            padding-top: -5px;
+            font-size: 16px;
+        }
+        #cur{
+            font-size:15px;
+            display:inline;
+            margin-left:0px;
+            font-weight:bold;
+        }
+        #add_event_button{
+            display: block;
+            width: 75px;
+            height: 30px;
+            margin-top: 30px;
+            line-height: 30px;
+        }
+        #add_event_button input{
+            width: 75px;
+            height: 24px;
+            display: block;
+            font-size: 13px;
+            padding-left: 5px;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+
 
 
 
         #mask{
+            width: 100%;
+            height: 1200px;
+            display: none;
+            background-color: rgba(0,0,0,0.7);
+            position: absolute;
+            top: 0;
+        }
+        #mask_box{
             width: 300px;
             height: 260px;
+            margin-top: 200px;
+            background-color: rgb(232, 242, 254);
+        }
+        #mask_box form div{
+            margin-top: 15px;
+        }
+        #mask_title{
+            height: 50px;
+            width: 100%;
+            line-height: 50px;
+            color: rgb(232, 242, 254);
+            background-color: #162f59;
+            position: relative;
+        }
+        #newName_input{
+            width: 168px;
+            height: 20px;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+        #mask_button_box{
+            padding-top: 15px;
+        }
+        #mask_button{
+            width: 75px;
+            height: 30px;
+            font-size: 14px;
         }
 
+        #mask_video{
+            width: 100%;
+            height: 1200px;
+            display: none;
+            background-color: rgba(0,0,0,0.7);
+            position: absolute;
+            top: 0;
+        }
+        #mask_video_box{
+            width: 450px;
+            height: 350px;
+            margin-top: 200px;
+            background-color: rgb(232, 242, 254);
+        }
+        #mask_video_table{
+            width: 281px;
+            height: 325px;
+            margin-top: 20px;
+            display: block;
+        }
+        #mask_video_video{
+            display: block;
+            width: 281px;
+            height: 150px;
+        }
+        #mask_video_video td{
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            display: block;
+            width: 281px;
+            height: 150px;
+        }
+        #mask_video_category, #mask_video_url{
+            left: 0;
+            right: 0;
+            margin: auto;
+            display: block;
+            width: 290px;
+            height: 45px;
+        }
+        #new_video{
+            width: 275px;
+            height: 125px;
+            margin-left: 0;
+            background-color: cadetblue;
+        }
+        #mask_video_category input{
+            width: 270px;
+            height: 24px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            display: block;
+            margin-left: -2px;
+        }
+        #url{
+            width: 200px;
+            height: 24px;
+            left: 0;
+            display: block;
+            float: left;
+            margin-left: -1px;
+            margin-right: 10px;
+        }
+        #choose{
+            width: 60px;
+            height: 30px;
+            display: block;
+            border-radius: 3px;
+            border: 1px solid #b2b2b2;
+            background-color: whitesmoke;
+        }
+        #mask_video_button{
+            padding-top: 15px;
+        }
 
+        #mask_calendar{
+            width: 100%;
+            height: 1200px;
+            display: none;
+            background-color: rgba(0,0,0,0.7);
+            position: absolute;
+            top: 0;
+        }
+        #mask_calendar_box{
+            width: 450px;
+            height: 350px;
+            margin-top: 600px;
+            background-color: rgb(232, 242, 254);
+        }
+        #mask_calendar_table{
+            width: 281px;
+            height: 325px;
+            margin-top: 30px;
+            display: block;
+        }
+        #mask_calendar_title, #mask_calendar_start, #mask_calendar_end{
+            width: 280px;
+            height: 55px;
+            line-height: 50px;
+            position: relative;
+        }
+        #add_event_title{
+            width: 75px;
+            height: 55px;
+        }
+        #add_event_event, #add_event_time{
+            width: 190px;
+            height: 25px;
+        }
+        #add_event_event input, #add_event_time input{
+            width: 190px;
+            height: 25px;
+            font-size: 13px;
+        }
+        #mask_calendar_button td{
+            padding-top: 30px;
+        }
+ 
+
+        div.card{
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
     </style>
 
     <body>
@@ -147,13 +691,202 @@
             </ul>
         </div>
     </div>
-    <div id="username">
-        <p>Username</p>
-        <p onclick="changeUsername()">change</p>
+    <div id="title">
+        <div id="title_content">
+            <h1 id="title_welcome">Hobby-Ever</h1>
+        </div>
     </div>
     <div id="middle">
-        <div id="middle_content">
+        <div id="middle_content" class="card">
+            <div id="tab">
+                <h3 id="tab_title">
+                    <span id="tab_title_info">Information</span>
+                    <span id="tab_title_video">Short Videos</span>
+                    <span id="tab_title_calendar">Calendar</span>
+                    <span id="tab_title_course">My Course</span>
+                </h3>
+                <ul id="tab_content">
+                    <li id="tab_info" name="tab">
+                        <table>
+                            <tr>
+                                <td id="info_title">Username</td>
+                                <td id="info_username">username</td>
+                                <td id="info_username_modify" onclick="changeUsername()">(modify)</td>
+                            </tr>
+                            <tr>
+                                <td id="info_title">Credit</td>
+                                <td id="info_credit">num</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="info_title">Skills</td>
+                                <td id="info_skill">
+                                    <div id="info_skill_table">
+                                        <table>
+                                            <tr>
+                                                <td id="info_skill_title">Basketball</td>
+                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="info_skill_title">Basketball</td>
+                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="info_skill_title">Basketball</td>
+                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                            </tr>
 
+                                            <tr>
+                                                <td id="info_skill_add_input"><input type="text" placeholder="Enter a skill you owned."></td>
+                                                <td id="info_skill_add_button"><input type="button" value="Add"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td id="info_title">Interests</td>
+                                <td id="info_interests">
+                                    <div id="info_interest_table">
+                                        <table>
+                                            <tr>
+                                                <td id="info_interest_title">Basketball</td>
+                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="info_interest_title">Basketball</td>
+                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="info_interest_title">Basketball</td>
+                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="info_interest_add_input"><input type="text" placeholder="Enter an interest."></td>
+                                                <td id="info_interest_add_button"><input type="button" value="Add"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="separate"></div>
+                        <form>
+                            <table id="info_table">
+                                <tr>
+                                    <td id="info_title">Gender</td>
+                                    <td id="info_gender">
+                                        <input name="gender" type="radio" value="Male">Male
+                                        <input name="gender" type="radio" value="Female" style="margin-left:30px;">Female
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="info_title">Phone</td>
+                                    <td id="info_phone">
+                                        <input id="phone_input" name="phone" type="text" value="9511111111">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="info_title">E-mail</td>
+                                    <td id="info_email">
+                                        <input id="email_input" name="email" type="text" value="googlemail@gmail.com">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="info_submit"><input type="button" value="Submit"></td>
+                                    <td id="info_reset"><input type="button" value="Reset"></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </li>
+
+                    <li id="tab_video" name="tab">
+                        <form>
+                            <table id="video_table">
+                                <tr>
+                                    <td id="video_box">
+                                        <div id="video"></div>
+                                        <p id="video_title"></p>
+                                    </td>
+                                    <td id="video_box" style="margin-left:20px;">
+                                        <div id="video"></div>
+                                        <p id="video_title"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="video_box">
+                                        <div id="video"></div>
+                                        <p id="video_title"></p>
+                                    </td>
+                                    <td id="video_box" style="margin-left:20px;">
+                                        <div id="video"></div>
+                                        <p id="video_title"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="video_box">
+                                        <div id="add_video" onclick="addVideo()"><p>+</p></div>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                            </table>
+                        </form>
+                    </li>
+
+                    <li id="tab_calendar" name="tab">
+                        <div id="calendar">
+
+                        </div>
+                        <div id="event_list">
+                            <form>
+                                <table id="event_list_table">
+                                    <tr>
+                                        <td id="event_title">Event1</td>
+                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_connect">--</td>
+                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_button"><input type="button" value="Delete"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="event_title">Event2</td>
+                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_connect">--</td>
+                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_button"><input type="button" value="Delete"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="event_title">Event3</td>
+                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_connect">--</td>
+                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
+                                        <td id="event_button"><input type="button" value="Delete"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="event_page" colspan="4">
+                                            <div id="page_box">
+                                                <div id="page">
+                                                        <input onclick="prev(2)" value="↢">
+                                                        &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;" id="all">all</div>&nbsp;&nbsp;
+                                                        <input onclick="next(2)" value="↣">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="add_event_button">
+                                            <input type="button" value="New Event" onclick="addEvent()">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </li>
+                    <li id="tab_course" name="tab">
+
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -161,22 +894,81 @@
 
 
     <center id="mask">
-        <div id="updateName">
+        <div id="mask_box">
             <div id="mask_title">
                 <h2>Change Username</h2>
-                <div id="exit" onclick="quit()" style="position:absolute;right:10px;top:0px;font-weight:bold; line-height: 50px;">X</div>
             </div>           
             <form>
-                <div>Current username</div>
+                <div id="oldNmae_title">Current username</div>
                 <div id="oldName">username</div>
 
-                <div>Update to</div>
-                <div id="newName">newUsername</div>
+                <div id="newName_title">Update to</div>
+                <div id="newName"><input id="newName_input" type="text"></div>
 
-                <div id="mask_button">
-                    <input type="submit" value="Submit">
-                    <input type="button" value="cancel">
+                <div id="mask_button_box">
+                    <input id="mask_button" type="submit" value="Submit" style="margin-right:10px;">
+                    <input id="mask_button" type="button" value="cancel" style="margin-left:10px;" onclick="quit()">
                 </div>
+            </form>
+        </div>
+    </center>
+
+    <center id="mask_video">
+        <div id="mask_video_box">
+            <div id="mask_title">
+                <h2>Upload Video</h2>
+            </div>
+            <form>
+                <table id="mask_video_table">
+                    <tr id="mask_video_video">
+                        <td><div id="new_video"></div></td>
+                    </tr>
+                    <tr id="mask_video_category">
+                        <td><input type="text" placeholder="Enter the category of this video"></td>
+                    </tr>
+                    <tr id="mask_video_url">
+                        <td>
+                            <input id="url" type="url">
+                            <input id="choose" type="button" value="Choose">
+                        </td>
+                    </tr>
+                    <tr id="mask_video_button">
+                        <td>
+                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
+                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px" onclick="quit()">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </center>
+
+    <center id="mask_calendar">
+        <div id="mask_calendar_box">
+            <div id="mask_title">
+                <h2>Add Event</h2>
+            </div>
+            <form>
+                <table id="mask_calendar_table">
+                    <tr id="mask_calendar_title">
+                        <td id="add_event_title">Event</td>
+                        <td id="add_event_event" colspan="2"><input type="text"></td>
+                    </tr>
+                    <tr id="mask_calendar_start">
+                        <td id="add_event_title">Start Time</td>
+                        <td id="add_event_time"><input name="add_event_end_time" type="datetime-local"></td>
+                    </tr>
+                    <tr id="mask_calendar_end">
+                        <td id="add_event_title">End Time</td>
+                        <td id="add_event_time"><input name="add_event_end_time" type="datetime-local"></td>
+                    </tr>
+                    <tr id="mask_calendar_button">
+                        <td colspan="2">
+                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
+                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px" onclick="quit()">
+                        </td>
+                    </tr>
+                </table>
             </form>
         </div>
     </center>
@@ -188,8 +980,129 @@
     function changeUsername(){
         $("#mask").fadeIn(600);
     }
+    function addVideo(){
+        $("#mask_video").fadeIn(600);
+    }
+    function addEvent(){
+        $("#mask_calendar").fadeIn(600);
+    }
 	function quit(){
-		$("#mask").fadeOut(1000);
+		$("#mask").fadeOut(600);
+        $("#mask_video").fadeOut(600);
+        $("#mask_calendar").fadeOut(600);
+	}
+
+    var spans = document.getElementsByTagName('span');
+    var tabs = document.getElementsByName('tab');
+    spans[0].style.display = 'block';
+    spans[0].style.background = '#162f59';
+    spans[0].style.color = '#e5f2f8';
+    tabs[0].style.display = 'block';
+    tabs[1].style.display = 'none';
+    tabs[2].style.display = 'none';
+    tabs[3].style.display = 'none';
+
+    spans[0].onclick = function() {
+        spans[0].style.display = 'block';
+        spans[0].style.background = '#162f59';
+        spans[0].style.color = '#e5f2f8';
+        tabs[0].style.display = 'block';
+
+        spans[1].style.background = '';
+        spans[1].style.color = '';
+        tabs[1].style.display = 'none';
+        
+        spans[2].style.background = '';
+        spans[2].style.color = '';
+        tabs[2].style.display = 'none';
+        
+        spans[3].style.background = '';
+        spans[3].style.color = '';
+        tabs[3].style.display = 'none';
+    }
+
+    spans[1].onclick = function() {
+        spans[1].style.display = 'block';
+        spans[1].style.background = '#162f59';
+        spans[1].style.color = '#e5f2f8';
+        tabs[1].style.display = 'block';
+
+        spans[0].style.background = '';
+        spans[0].style.color = '';
+        tabs[0].style.display = 'none';
+        
+        spans[2].style.background = '';
+        spans[2].style.color = '';
+        tabs[2].style.display = 'none';
+        
+        spans[3].style.background = '';
+        spans[3].style.color = '';
+        tabs[3].style.display = 'none';
+    }
+
+    spans[2].onclick = function() {
+        spans[2].style.display = 'block';
+        spans[2].style.background = '#162f59';
+        spans[2].style.color = '#e5f2f8';
+        tabs[2].style.display = 'block';
+        
+        spans[0].style.background = '';
+        spans[0].style.color = '';
+        tabs[0].style.display = 'none';
+
+        spans[1].style.background = '';
+        spans[1].style.color = '';
+        tabs[1].style.display = 'none';
+        
+        spans[3].style.background = '';
+        spans[3].style.color = '';
+        tabs[3].style.display = 'none';
+    }
+
+    spans[3].onclick = function() {
+        spans[3].style.display = 'block';
+        spans[3].style.background = '#162f59';
+        spans[3].style.color = '#e5f2f8';
+        tabs[3].style.display = 'block';
+        
+        spans[0].style.background = '';
+        spans[0].style.color = '';
+        tabs[0].style.display = 'none';
+
+        spans[1].style.background = '';
+        spans[1].style.color = '';
+        tabs[1].style.display = 'none';
+        
+        spans[2].style.background = '';
+        spans[2].style.color = '';
+        tabs[2].style.display = 'none';
+    }
+
+
+    
+	function prev(num) {
+		var cur =parseInt($("#cur").html());
+		var all =parseInt($("#all").html());
+		if(num == 1) {
+			if(cur <= 1) {
+				return ;
+			} else {
+				cur=cur-1;
+			}
+		}
+		// window.location.href="calendar.action?cur="+cur;
+	}
+	function next(num) {
+		var cur =parseInt($("#cur").html());
+		var all =parseInt($("#all").html());
+		if(num == 1) {
+			if(cur >= all) {
+				return ;
+			} else {
+				cur=cur+1;
+			}
+		}
+		// window.location.href="calendar.action?cur="+cur;
 	}
 </script>
 </html>
