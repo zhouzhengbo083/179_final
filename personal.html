@@ -496,6 +496,92 @@
         }
 
 
+        #course_list{
+            margin-top: 20px;
+            width: 525px;
+            height: 600px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #course_table{
+            width: 525px;
+            height: 600px;
+            margin-top:15px;
+        }
+        #course_table tr{
+            display: block;
+            height:40px;
+            width: 525px;
+            margin-top: 10px;
+        }
+        #course_table tr td{
+            display: block;
+            float: left;
+        }
+        #course_table_title{
+            display: block;
+            width: 110px;
+            height: 40x;
+            line-height: 40px;
+        }
+        #course_table_tutorName{
+            display: block;
+            width: 90px;
+            height: 40px;
+            margin-left: 15px;
+            line-height: 40px;
+        }
+        #course_table_tutorName{
+            margin-right: 25px;
+        }
+        #course_table_date{
+            margin-right: 20px;
+        }
+        #course_table_date, #course_table_date div{
+            display: block;
+            width: 160px;
+            height: 40px;
+            line-height: 40px;
+        }
+        #course_start_time{
+            margin-top: 5px;
+        }
+        #course_end_time{
+            margin-top: 0;
+        }
+        #course_start_time, #course_end_time{
+            display: block;
+            width: 155px;
+            height: 0px;
+            margin-left: 8px;
+            line-height: 20px;
+            float: left;
+        }
+        #course_table_cancel{
+            display: block;
+            width: 80px;
+            height: 40px;
+            float: left;
+            line-height: 40px;
+            margin-top: 7px;
+            margin-left: 12px;
+        }
+        #course_table_cancel input{
+            width: 75px;
+            height: 24px;
+            display: block;
+            font-size: 13px;
+            margin-top: 3px;
+            border-radius: 5px;
+            border: 1px solid #b2b2b2; 
+        }
+        #course_page{
+            display: block;
+            width: 400px;
+            height: 30px;
+            line-height: 30px;
+        }
 
 
         #mask{
@@ -883,7 +969,56 @@
                         </div>
                     </li>
                     <li id="tab_course" name="tab">
-
+                        <div id="course_list">
+                            <form>
+                                <table id="course_table">
+                                    <tr>
+                                        <td id="course_table_title">Title</td>
+                                        <td id="course_table_tutorName">Tutor Name</td>
+                                        <td id="course_table_date">
+                                            <div>
+                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
+                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
+                                            </div>
+                                        </td>
+                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="course_table_title">Title</td>
+                                        <td id="course_table_tutorName">Tutor Name</td>
+                                        <td id="course_table_date">
+                                            <div>
+                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
+                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
+                                            </div>
+                                        </td>
+                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="course_table_title">Title</td>
+                                        <td id="course_table_tutorName">Tutor Name</td>
+                                        <td id="course_table_date">
+                                            <div>
+                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
+                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
+                                            </div>
+                                        </td>
+                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="course_page" colspan="4">
+                                            <div id="page_box">
+                                                <div id="page">
+                                                        <input onclick="prev(2)" value="↢">
+                                                        &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;" id="all">all</div>&nbsp;&nbsp;
+                                                        <input onclick="next(2)" value="↣">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
                     </li>
                 </ul>
             </div>
