@@ -210,7 +210,7 @@
             font-size: 18px;
             margin-left: 115px;
         }
-        #info_username, #info_credit{
+        #info_username, #info_credit, #info_rate{
             width: 175px;
             height: 30px;
             line-height: 60px;
@@ -282,7 +282,7 @@
         #separate{
             border-bottom: 1px solid #b2b2b2;
             width: 600px;
-            height: 65px;
+            height: 40px;
         }
 
 
@@ -353,10 +353,31 @@
             display: block;
             float: left;
         }
+        #video_box{
+            width: 275px;
+            height: 170px;
+            display: block;
+        }
         #video, #add_video{
             width: 275px;
             height: 125px;
             border: 1px solid #b2b2b2; 
+        }
+        #video_info{
+            width: 275px;
+            height: 25px;
+            margin-top: 10px;
+        }
+        #video_title{
+            width: 200px;
+            height: 25px;
+            margin-top: 0;
+            float: left;
+            display: block;
+        }
+        #video_like{
+            float: right;
+            width: 20px;
         }
         #add_video p{
             width: 275px;
@@ -498,21 +519,21 @@
 
         #course_list{
             margin-top: 20px;
-            width: 525px;
+            width: 625px;
             height: 600px;
             left: 0;
             right: 0;
             margin: auto;
         }
         #course_table{
-            width: 525px;
+            width: 625px;
             height: 600px;
             margin-top:15px;
         }
         #course_table tr{
             display: block;
             height:40px;
-            width: 525px;
+            width: 625px;
             margin-top: 10px;
         }
         #course_table tr td{
@@ -558,16 +579,16 @@
             line-height: 20px;
             float: left;
         }
-        #course_table_cancel{
+        #course_table_button{
             display: block;
-            width: 80px;
+            width: 180px;
             height: 40px;
             float: left;
             line-height: 40px;
             margin-top: 7px;
             margin-left: 12px;
         }
-        #course_table_cancel input{
+        #course_rate, #course_cancel{
             width: 75px;
             height: 24px;
             display: block;
@@ -575,6 +596,10 @@
             margin-top: 3px;
             border-radius: 5px;
             border: 1px solid #b2b2b2; 
+            float: left;
+        }
+        #course_rate{
+            margin-right: 10px;
         }
         #course_page{
             display: block;
@@ -805,6 +830,11 @@
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
+                                <td id="info_title">Rate</td>
+                                <td id="info_rate">num</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
                                 <td id="info_title">Skills</td>
                                 <td id="info_skill">
                                     <div id="info_skill_table">
@@ -893,22 +923,34 @@
                             <table id="video_table">
                                 <tr>
                                     <td id="video_box">
-                                        <div id="video"></div>
-                                        <p id="video_title"></p>
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <img id="video_like" src="img/like.png">   
+                                        </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
-                                        <div id="video"></div>
-                                        <p id="video_title"></p>
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <img id="video_like" src="img/like.png">   
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="video_box">
-                                        <div id="video"></div>
-                                        <p id="video_title"></p>
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <img id="video_like" src="img/like.png">   
+                                        </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
-                                        <div id="video"></div>
-                                        <p id="video_title"></p>
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <img id="video_like" src="img/like.png">   
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -980,8 +1022,11 @@
                                                 <p id="course_start_time">2019-02-02 09:21 A.M.</p>
                                                 <p id="course_end_time">2019-02-02 09:30 A.M.</p>
                                             </div>
+                                        </td> 
+                                        <td id="course_table_button">
+                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
+                                            <input id="course_cancel" type="button" value="Cancel">
                                         </td>
-                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
                                     </tr>
                                     <tr>
                                         <td id="course_table_title">Title</td>
@@ -992,7 +1037,10 @@
                                                 <p id="course_end_time">2019-02-02 09:30 A.M.</p>
                                             </div>
                                         </td>
-                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
+                                        <td id="course_table_button">
+                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
+                                            <input id="course_cancel" type="button" value="Cancel">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td id="course_table_title">Title</td>
@@ -1003,7 +1051,10 @@
                                                 <p id="course_end_time">2019-02-02 09:30 A.M.</p>
                                             </div>
                                         </td>
-                                        <td id="course_table_cancel"><input type="button" value="Cancel"></td>
+                                        <td id="course_table_button">
+                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
+                                            <input id="course_cancel" type="button" value="Cancel">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td id="course_page" colspan="4">
@@ -1126,6 +1177,12 @@
         $("#mask_video").fadeOut(600);
         $("#mask_calendar").fadeOut(600);
 	}
+    function rate(){
+        window.location.href = 'rate.html';
+    }
+    function playVideo(){
+        window.location.href = 'video.html';
+    }
 
     var spans = document.getElementsByTagName('span');
     var tabs = document.getElementsByName('tab');
