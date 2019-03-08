@@ -2,6 +2,54 @@
 <html>
     <head>
         <title>Hobby-ever</title>
+        <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
+        authDomain: "cs179-final.firebaseapp.com",
+        databaseURL: "https://cs179-final.firebaseio.com",
+        projectId: "cs179-final",
+        storageBucket: "cs179-final.appspot.com",
+        messagingSenderId: "863057579113"
+    };
+    firebase.initializeApp(config);
+
+    function handleSignUp() {
+        var email = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        if (email.length < 4) {
+            alert('Please enter an email address.');
+            return;
+        }
+        if (password.length < 4) {
+            alert('Please enter a password.');
+            return;
+        }
+        // Sign in with email and pass.
+        // [START createwithemail]
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // [START_EXCLUDE]
+            if (errorCode == 'auth/weak-password') {
+                alert('The password is too weak.');
+            } else {
+                alert(errorMessage);
+            }
+            console.log(error);
+        // [END_EXCLUDE]
+        });
+
+        window.location.href = "main.html";
+        // [END createwithemail]
+    }
+
+    </script>
+
+
+
     </head>
     <style>
         #whole{
@@ -144,7 +192,7 @@
                     </tr>
                     <tr style="margin-top: 10px; display: block;">
                         <td style="width:420px; height:45px; display: block;"> 
-                            <button style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;">Sign Up</button>
+                            <input style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;" type="button" onclick="handleSignUp()" value="Sign Up"></button>
                         </td>
                     </tr>
                     <tr style="margin-top: 0px; display: block; height: 20px;">
@@ -172,4 +220,7 @@
     </div>
 
 </body>
+
+
+
 </html>

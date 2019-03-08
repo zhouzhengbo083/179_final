@@ -2,6 +2,8 @@
 <html>
     <head>
         <title>Hobby-ever</title>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
     </head>
     <style>
         #whole{
@@ -86,9 +88,6 @@
             margin: auto;
             background-color: bisque;
         }
-        form.card{
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
         #username_input{
             width:300px; 
             height:45px; 
@@ -99,6 +98,9 @@
             left: 0; 
             right: 0;
             margin: auto;
+        }
+        form.card{
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
     </style>
 
@@ -151,7 +153,7 @@
                     </tr>
                     <tr style="margin-top: 10px; display: block;">
                         <td style="width:420px; height:45px; display: block;"> 
-                            <button style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;" onclick="location='main.html'">Log In</button>
+                            <input type="button" style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;" onclick="loginUser()" value="Log In">
                         </td>
                     </tr>
                     <tr style="display: block; height: 20px;">
@@ -178,5 +180,58 @@
         </div>
     </div>
 
+
 </body>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
+    authDomain: "cs179-final.firebaseapp.com",
+    databaseURL: "https://cs179-final.firebaseio.com",
+    projectId: "cs179-final",
+    storageBucket: "cs179-final.appspot.com",
+    messagingSenderId: "863057579113"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<script type="text/javascript">
+        
+    function loginUser(){
+        var email = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        if (firebase.auth().currentUser) {
+            // [START signout]
+            firebase.auth().signOut();
+            // [END signout]
+        }
+        else{
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert(errorMessage);
+                // ...
+            });
+        }
+    }
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // User is signed in.
+            alert("success");
+            window.location.href = "main.html";
+            // ...
+        } else {
+            // User is signed out.
+            alert("fail");
+        }
+    });
+
+</script>
+
 </html>

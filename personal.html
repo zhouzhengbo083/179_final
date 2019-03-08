@@ -2,21 +2,37 @@
 <html>
     <head>
         <title>Hobby-ever</title>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+    
     </head>
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+        apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
+        authDomain: "cs179-final.firebaseapp.com",
+        databaseURL: "https://cs179-final.firebaseio.com",
+        projectId: "cs179-final",
+        storageBucket: "cs179-final.appspot.com",
+        messagingSenderId: "863057579113"
+        };
+        firebase.initializeApp(config);
+    </script>
     
     <script type="text/javascript">
         function signout(){
-            alert("Are you sure to sign out?");
+    
+            firebase.auth().signOut().then(function() {
+                // Sign-out successful.
+                window.location.href = "login.html";
+                }, function(error) {
+                // An error happened.
+                    alert(error);
+                });
+            
         }
-        function remove_skill(){
-            alert("Are you sure to remove this skill?");
-        }
-        function remove_interest(){
-            alert("Are you sure to remove this interest?");
-        }
-    </script> 
+    </script>
     <style>
 
         #top{
