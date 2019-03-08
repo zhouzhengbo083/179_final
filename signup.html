@@ -2,7 +2,10 @@
 <html>
     <head>
         <title>Hobby-ever</title>
-        <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
     <script>
     // Initialize Firebase
     var config = {
@@ -41,7 +44,7 @@
             console.log(error);
         // [END_EXCLUDE]
         });
-
+        alert("sign up successfully");
         window.location.href = "main.html";
         // [END createwithemail]
     }
@@ -192,7 +195,7 @@
                     </tr>
                     <tr style="margin-top: 10px; display: block;">
                         <td style="width:420px; height:45px; display: block;"> 
-                            <input style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;" type="button" onclick="handleSignUp()" value="Sign Up"></button>
+                            <input style="width:300px; height:45px; font-size: 18px; background-color:lightgreen; border: none; left: 0; right: 0;margin: auto;" type="button" onclick="handleSignUp()" value="Sign Up">
                         </td>
                     </tr>
                     <tr style="margin-top: 0px; display: block; height: 20px;">
