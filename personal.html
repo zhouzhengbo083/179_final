@@ -1,855 +1,1002 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Hobby-ever</title>
-        <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
-        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
-    
-    </head>
-    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
+
+<head>
+    <title>Hobby-ever</title>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+
+</head>
+<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
         apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
         authDomain: "cs179-final.firebaseapp.com",
         databaseURL: "https://cs179-final.firebaseio.com",
         projectId: "cs179-final",
         storageBucket: "cs179-final.appspot.com",
         messagingSenderId: "863057579113"
-        };
-        firebase.initializeApp(config);
-    </script>
-    
-    <script type="text/javascript">
-        window.onload = function (){
-            firebase.auth().onAuthStateChanged(function(user) {
-                if(user){
-                    var email = user.email;
-                    var gender = user.gender;
-                    var username = user.username;
-                    var phone = user.phone;
-                    var interests = user.interests;
-                    var skills = user.skills;
-             
+    };
+    firebase.initializeApp(config);
+</script>
 
-                    
-                    document.getElementById('signup').style.display = 'none';
-                    document.getElementById('login').style.display = 'none';
-                    document.getElementById('top1').style.display = 'none';
-                    document.getElementById('top2').style.display = 'none';
-                    document.getElementById('user').style.display = 'block';
-                    document.getElementById('top3').style.display = 'block';
-                    document.getElementById('signout').style.display = 'block';
-                    
-                    if(username){
-                        document.getElementById('username').textContent = username;
-                    }   
-                    else if(email){
-                        document.getElementById('username').textContent = email;
-                    }
+<script type="text/javascript">
+    window.onload = function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                var email = user.email;
+                var credit = user.credit;
+                var gender = user.gender;
+                var username = user.username;
+                var phone = user.phone;
+                var interests = user.interests;
+                var skills = user.skills;
+                var rate = user.rate;
+
+
+
+                document.getElementById('signup').style.display = 'none';
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('top1').style.display = 'none';
+                document.getElementById('top2').style.display = 'none';
+                document.getElementById('user').style.display = 'block';
+                document.getElementById('top3').style.display = 'block';
+                document.getElementById('signout').style.display = 'block';
+
+                if (username) {
+                    document.getElementById('username').textContent = username;
                 }
-            });
-        };
-        function signout(){
-
-            firebase.auth().signOut().then(function() {
-                // Sign-out successful.
-                window.location.href = "login.html";
-                }, function(error) {
-                // An error happened.
-                    alert(error);
-                });
-
-        }
-    </script>
-    <style>
-
-#top{
-            background-color: white;
-            width: 100%;
-            height: 31px;
-            position: relative;
-        }
-        #top_content{
-            width: 900px;
-            height: 30px;
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #top ul{
-            display: block;
-            height: 30px;
-            float: right;
-            line-height: 30px;
-            margin-top: 0;
-        }
-        #top ul li{
-            float: left;
-            list-style: none;
-            color: rgb(110, 110, 110);
-            font-size: 14px;
-        }
-        #top ul li a{
-            list-style: none;
-            text-decoration: none;
-            color: rgb(110, 110, 110);
-            font-size: 14px;
-        }
-        #signup, #login, #signout{
-            float: left;
-            list-style: none;
-            text-decoration: none;
-            color: rgb(110, 110, 110);
-            font-size: 14px;
-            display: block;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-        #user{
-            float: left;
-            list-style: none;
-            text-decoration: none;
-            color: rgb(110, 110, 110);
-            font-size: 14px;
-            display: block;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            margin-left: 10px;
-        }
-        #signout, #user, #top2, #top3{
-            display: none;
-        }
-        #username{
-            margin-right: 10px;
-        }
-
-        #menu{
-            background-color: #162f59;
-            width: 100%;
-            height: 60px;
-        }
-        #menu_content{
-            width: 975px;
-            height: 60px;
-            line-height: 60px;
-            position: relative;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #menu_content ul{
-            display: block;
-            height: 30px;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-        }
-        #menu_content ul li{
-            float: left;
-            display: block;
-        }
-        #menu_content ul li a{
-            list-style: none;
-            text-decoration: none;
-            color: #f9fcfd;
-        }
-        #menu_homepage{
-            width: 100px;
-        }
-        #menu_match, #menu_search, #menu_personal, #menu_rate, #menu_course{
-            width: 75px;
-            text-align: center;
-        }
+                else if (email) {
+                    document.getElementById('username').textContent = email;
+                }
 
 
-        #title{
-            width: 100%;
-            height: 60px;
+            }
+        });
+    };
+    function signout() {
 
-        }
-        #title_content{
-            width: 900px;
-            height: 60px;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #title_welcome{
-            width: 250px;
-            height: 60px;
-            line-height: 60px;
-            display: block;
-        }
+        firebase.auth().signOut().then(function () {
+            // Sign-out successful.
+            window.location.href = "login.html";
+        }, function (error) {
+            // An error happened.
+            alert(error);
+        });
 
-        #middle{
-            width: 100%;
-            height: 1000px;
-            background: linear-gradient(to bottom,white,#e5f2f8);
-        }
-        #middle_content{
-            width: 900px;
-            height: 900px;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #tab{
-            width: 900px;
-            height: 900px;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #tab_title{
-            height: 35px;
-            width: 770px;
-            margin-left: 65px;
-            padding-left: -5px;
-            padding-top: 15px;
-            border-bottom: 1px solid #162f59;
-        }
-        #tab_title span{
-            font-size: 18px;
-            font-weight: 1;
-            padding-left: 15px;
-            padding-right: 15px;
-            margin-left: 8px;
-            height: 35px;
-            line-height: 35px;
-            float: left;
-            display: block;
-        }
-        #tab_content{
-            list-style: none;
-            width: 750px;
-            height: 750px;
-            padding-left: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-            display: block;
-            border: 1px dashed #b2b2b2;
-        }
-        #tab_info, #tab_video, #tab_calendar, #tab_course{
-            display: block;
-            width: 600px;
-            height: 800px;
-            left: 0;
-            right: 0;
-            margin: auto;
-            position: relative;
-            padding-top: 5px;
-        }
-        #tab_info table tr td{
-            text-align: left;
-            margin-top: 0;
-            display: block;
-            float: left;
-        }
-        #info_title{
-            width: 120px;
-            height: 30px;
-            line-height: 60px;
-            display: block;
-            font-size: 18px;
-            margin-left: 115px;
-        }
-        #info_username, #info_credit, #info_rate{
-            width: 175px;
-            height: 30px;
-            line-height: 60px;
-            display: block;
-            font-size: 18px;
-            margin-left: 3px;
-        }
-        #info_username_modify{
-            width: 75px;
-            height: 30px;
-            line-height: 60px;
-            display: block;
-            text-decoration: underline;
-            text-align: right;
-        }
-        #info_skill, #info_interest{
-            width: 300px;
-            line-height: 30px;
-            display: block;
-            font-size: 18px;
-        }
-        #info_skill_table{
-            margin-top: 12px;
-            width: 300px;
-        }
-        #info_interest_table{
-            margin-top: 20px;
-            width: 300px;
-        }
-        #info_skill_table table tr, #info_interest_table table tr{
-            display: block;
-            width: 300px;
-            height: 30px;
-        }
-        #info_skill_title, #info_interest_title{
-            display: block;
-            width: 170px;
-            height: 30px;
-            margin-left: 0;
-        }
-        #info_skill_button, #info_skill_add_button, #info_interest_button, #info_interest_add_button{
-            margin-right: 20px;
-            width: 60px;
-            height: 30px;
-            display: block;
-        }
-        #info_skill_button input, #info_skill_add_button input, #info_interest_button input, #info_interest_add_button input{
-            width: 60px;
-            height: 30px;
-            display: block;
-            margin-top: 5px;
-        }
-        #info_skill_add_input, #info_interest_add_input{
-            display: block;
-            width: 170px;
-            height: 30px;
-            margin-left: 0;
-        }
-        #info_skill_add_input input, #info_interest_add_input input{
-            display: block;
-            width: 150px;
-            height: 20px;
-            margin-left: 0;
-            margin-top: 3px;
-            border-radius: 3px;
-            border: 1px solid #b2b2b2;
-        }
+    }
+</script>
+<style>
+    #top {
+        background-color: white;
+        width: 100%;
+        height: 31px;
+        position: relative;
+    }
 
-        #separate{
-            border-bottom: 1px solid #b2b2b2;
-            width: 600px;
-            height: 40px;
-        }
+    #top_content {
+        width: 900px;
+        height: 30px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    #top ul {
+        display: block;
+        height: 30px;
+        float: right;
+        line-height: 30px;
+        margin-top: 0;
+    }
+
+    #top ul li {
+        float: left;
+        list-style: none;
+        color: rgb(110, 110, 110);
+        font-size: 14px;
+    }
+
+    #top ul li a {
+        list-style: none;
+        text-decoration: none;
+        color: rgb(110, 110, 110);
+        font-size: 14px;
+    }
+
+    #signup,
+    #login,
+    #signout {
+        float: left;
+        list-style: none;
+        text-decoration: none;
+        color: rgb(110, 110, 110);
+        font-size: 14px;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #user {
+        float: left;
+        list-style: none;
+        text-decoration: none;
+        color: rgb(110, 110, 110);
+        font-size: 14px;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        margin-left: 10px;
+    }
+
+    #signout,
+    #user,
+    #top2,
+    #top3 {
+        display: none;
+    }
+
+    #username {
+        margin-right: 10px;
+    }
+
+    #menu {
+        background-color: #162f59;
+        width: 100%;
+        height: 60px;
+    }
+
+    #menu_content {
+        width: 975px;
+        height: 60px;
+        line-height: 60px;
+        position: relative;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    #menu_content ul {
+        display: block;
+        height: 30px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
+    #menu_content ul li {
+        float: left;
+        display: block;
+    }
+
+    #menu_content ul li a {
+        list-style: none;
+        text-decoration: none;
+        color: #f9fcfd;
+    }
+
+    #menu_homepage {
+        width: 100px;
+    }
+
+    #menu_match,
+    #menu_search,
+    #menu_personal,
+    #menu_rate,
+    #menu_course {
+        width: 75px;
+        text-align: center;
+    }
 
 
-        #info_table{
-            width: 600px;
-            margin-top: 15px;
-        }
-        #info_table tr{
-            margin-top: 8px;
-            display: block;
-            height: 40px;
-            width: 600px;
-        }
-        #info_table table tr td{
-            text-align: left;
-            display: block;
-            float: left;
-        }
-        #info_gender, #info_phone, #info_email{
-            width: 200px;
-            height: 30px;
-            line-height: 60px;
-            display: block;
-            font-size: 18px;
-        }
-        #phone_input, #email_input{
-            width: 230px;
-            height: 24px;
-            font-size: 14px;
-            margin-left: 2px;
-        }
-        #info_submit{
-            width: 120px;
-            height: 30px;
-            line-height: 60px;
-            float: left;
-            display: block;
-            font-size: 18px;
-            margin-left: 180px;
-            text-align: right;
-        }
-        #info_reset{
-            width: 120px;
-            height: 30px;
-            float: left;
-            line-height: 60px;
-            display: block;
-            margin-left: 30px;
-        }
-        #info_submit input, #info_reset input{
-            width: 75px;
-            height: 30px;
-            display: block;
-            margin-top: 45px;
-            margin-left: 20px;
-            font-size: 13px;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-        }
+    #title {
+        width: 100%;
+        height: 60px;
+
+    }
+
+    #title_content {
+        width: 900px;
+        height: 60px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    #title_welcome {
+        width: 250px;
+        height: 60px;
+        line-height: 60px;
+        display: block;
+    }
+
+    #middle {
+        width: 100%;
+        height: 1000px;
+        background: linear-gradient(to bottom, white, #e5f2f8);
+    }
+
+    #middle_content {
+        width: 900px;
+        height: 900px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    #tab {
+        width: 900px;
+        height: 900px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    #tab_title {
+        height: 35px;
+        width: 770px;
+        margin-left: 65px;
+        padding-left: -5px;
+        padding-top: 15px;
+        border-bottom: 1px solid #162f59;
+    }
+
+    #tab_title span {
+        font-size: 18px;
+        font-weight: 1;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-left: 8px;
+        height: 35px;
+        line-height: 35px;
+        float: left;
+        display: block;
+    }
+
+    #tab_content {
+        list-style: none;
+        width: 750px;
+        height: 750px;
+        padding-left: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: block;
+        border: 1px dashed #b2b2b2;
+    }
+
+    #tab_info,
+    #tab_video,
+    #tab_calendar,
+    #tab_course {
+        display: block;
+        width: 600px;
+        height: 800px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        position: relative;
+        padding-top: 5px;
+    }
+
+    #tab_info table tr td {
+        text-align: left;
+        margin-top: 0;
+        display: block;
+        float: left;
+    }
+
+    #info_title {
+        width: 120px;
+        height: 30px;
+        line-height: 60px;
+        display: block;
+        font-size: 18px;
+        margin-left: 115px;
+    }
+
+    #info_username,
+    #info_credit,
+    #info_rate {
+        width: 175px;
+        height: 30px;
+        line-height: 60px;
+        display: block;
+        font-size: 18px;
+        margin-left: 3px;
+    }
+
+    #info_username_modify {
+        width: 75px;
+        height: 30px;
+        line-height: 60px;
+        display: block;
+        text-decoration: underline;
+        text-align: right;
+    }
+
+    #info_skill,
+    #info_interest {
+        width: 300px;
+        line-height: 30px;
+        display: block;
+        font-size: 18px;
+    }
+
+    #info_skill_table {
+        margin-top: 12px;
+        width: 300px;
+    }
+
+    #info_interest_table {
+        margin-top: 20px;
+        width: 300px;
+    }
+
+    #info_skill_table table tr,
+    #info_interest_table table tr {
+        display: block;
+        width: 300px;
+        height: 30px;
+    }
+
+    #info_skill_title,
+    #info_interest_title {
+        display: block;
+        width: 170px;
+        height: 30px;
+        margin-left: 0;
+    }
+
+    #info_skill_button,
+    #info_skill_add_button,
+    #info_interest_button,
+    #info_interest_add_button {
+        margin-right: 20px;
+        width: 60px;
+        height: 30px;
+        display: block;
+    }
+
+    #info_skill_button input,
+    #info_skill_add_button input,
+    #info_interest_button input,
+    #info_interest_add_button input {
+        width: 60px;
+        height: 30px;
+        display: block;
+        margin-top: 5px;
+    }
+
+    #info_skill_add_input,
+    #info_interest_add_input {
+        display: block;
+        width: 170px;
+        height: 30px;
+        margin-left: 0;
+    }
+
+    #info_skill_add_input input,
+    #info_interest_add_input input {
+        display: block;
+        width: 150px;
+        height: 20px;
+        margin-left: 0;
+        margin-top: 3px;
+        border-radius: 3px;
+        border: 1px solid #b2b2b2;
+    }
+
+    #separate {
+        border-bottom: 1px solid #b2b2b2;
+        width: 600px;
+        height: 40px;
+    }
 
 
-        #video_table{
-            margin-top: 20px;
-        }
-        #video_table tr td{
-            text-align: left;
-            margin-top: 0;
-            display: block;
-            float: left;
-        }
-        #video_box{
-            width: 275px;
-            height: 170px;
-            display: block;
-        }
-        #video, #add_video{
-            width: 275px;
-            height: 125px;
-            border: 1px solid #b2b2b2; 
-        }
-        #video_info{
-            width: 275px;
-            height: 25px;
-            margin-top: 10px;
-        }
-        #video_title{
-            width: 200px;
-            height: 25px;
-            margin-top: 0;
-            float: left;
-            display: block;
-        }
-        #video_like{
-            float: right;
-            width: 20px;
-        }
-        #add_video p{
-            width: 275px;
-            height: 125px;
-            font-size: 50px;
-            font-weight: 1px;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 125px;
-            padding-top: 0;
-            margin-top: 0;
-            color: #b2b2b2;
-            text-align: center;
-            display: block;
-        }
+    #info_table {
+        width: 600px;
+        margin-top: 15px;
+    }
 
-        #tab_calendar{
-            padding-top: 30px;
-        }
-        #calendar{
-            margin-top: 20px;
-            width: 575px;
-            height: 375px;
-            left: 0;
-            right: 0;
-            margin: auto;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-            margin-bottom: 30px;
-        }
-        #event_list{
-            margin-top: 20px;
-            width: 575px;
-            height: 275px;
-            left: 0;
-            right: 0;
-            margin: auto;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-        }
-        #event_list_table{
-            width: 575px;
-            height: 250px;
-            margin-top:15px;
-        }
-        #event_list_table tr{
-            display: block;
-            height: 38px;
-            width: 575px;
-        }
-        #event_list_table tr td{
-            float: left;
-        }
-        #event_title{
-            display: block;
-            width: 90px;
-            height: 30px;
-            margin-left: 15px;
-            line-height: 30px;
-        }
-        #event_start_date, #event_end_date{
-            display: block;
-            width: 155px;
-            height: 30px;
-            margin-left: 8px;
-            line-height: 30px;
-        }
-        #event_connect{
-            display: block;
-            width: 15px;
-            height: 30px;
-            margin-left: 12px;
-            line-height: 30px;
-        }
-        #event_button{
-            display: block;
-            width: 80px;
-            height: 30px;
-            float: left;
-            line-height: 30px;
-            margin-left: 12px;
-        }
-        #event_button input{
-            width: 75px;
-            height: 24px;
-            display: block;
-            font-size: 13px;
-            margin-top: 3px;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-        }
-        #event_page{
-            display: block;
-            width: 460px;
-            height: 30px;
-            margin-left: 15px;
-            line-height: 30px;
-        }
-        #page_box{
-            width: 460px;
-            height: 30px;
-            text-align: center;
-            margin-left: 200px;
-            margin-top: 30px;
-        }
-        #page{
-            width: 125px;
-            height: 30px;
-            display: block;
-        }
-        #page input{
-            width: 15px;
-            height: 8px;
-            padding-top: -5px;
-            font-size: 16px;
-        }
-        #cur{
-            font-size:15px;
-            display:inline;
-            margin-left:0px;
-            font-weight:bold;
-        }
-        #add_event_button{
-            display: block;
-            width: 75px;
-            height: 30px;
-            margin-top: 30px;
-            line-height: 30px;
-        }
-        #add_event_button input{
-            width: 75px;
-            height: 24px;
-            display: block;
-            font-size: 13px;
-            padding-left: 5px;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-        }
+    #info_table tr {
+        margin-top: 8px;
+        display: block;
+        height: 40px;
+        width: 600px;
+    }
+
+    #info_table table tr td {
+        text-align: left;
+        display: block;
+        float: left;
+    }
+
+    #info_gender,
+    #info_phone,
+    #info_email {
+        width: 200px;
+        height: 30px;
+        line-height: 60px;
+        display: block;
+        font-size: 18px;
+    }
+
+    #phone_input,
+    #email_input {
+        width: 230px;
+        height: 24px;
+        font-size: 14px;
+        margin-left: 2px;
+    }
+
+    #info_submit {
+        width: 120px;
+        height: 30px;
+        line-height: 60px;
+        float: left;
+        display: block;
+        font-size: 18px;
+        margin-left: 180px;
+        text-align: right;
+    }
+
+    #info_reset {
+        width: 120px;
+        height: 30px;
+        float: left;
+        line-height: 60px;
+        display: block;
+        margin-left: 30px;
+    }
+
+    #info_submit input,
+    #info_reset input {
+        width: 75px;
+        height: 30px;
+        display: block;
+        margin-top: 45px;
+        margin-left: 20px;
+        font-size: 13px;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+    }
 
 
-        #course_list{
-            margin-top: 20px;
-            width: 625px;
-            height: 600px;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
-        #course_table{
-            width: 625px;
-            height: 600px;
-            margin-top:15px;
-        }
-        #course_table tr{
-            display: block;
-            height:40px;
-            width: 625px;
-            margin-top: 10px;
-        }
-        #course_table tr td{
-            display: block;
-            float: left;
-        }
-        #course_table_title{
-            display: block;
-            width: 110px;
-            height: 40x;
-            line-height: 40px;
-        }
-        #course_table_tutorName{
-            display: block;
-            width: 90px;
-            height: 40px;
-            margin-left: 15px;
-            line-height: 40px;
-        }
-        #course_table_tutorName{
-            margin-right: 25px;
-        }
-        #course_table_date{
-            margin-right: 20px;
-        }
-        #course_table_date, #course_table_date div{
-            display: block;
-            width: 160px;
-            height: 40px;
-            line-height: 40px;
-        }
-        #course_start_time{
-            margin-top: 5px;
-        }
-        #course_end_time{
-            margin-top: 0;
-        }
-        #course_start_time, #course_end_time{
-            display: block;
-            width: 155px;
-            height: 0px;
-            margin-left: 8px;
-            line-height: 20px;
-            float: left;
-        }
-        #course_table_button{
-            display: block;
-            width: 180px;
-            height: 40px;
-            float: left;
-            line-height: 40px;
-            margin-top: 7px;
-            margin-left: 12px;
-        }
-        #course_rate, #course_cancel{
-            width: 75px;
-            height: 24px;
-            display: block;
-            font-size: 13px;
-            margin-top: 3px;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-            float: left;
-        }
-        #course_rate{
-            margin-right: 10px;
-        }
-        #course_page{
-            display: block;
-            width: 400px;
-            height: 30px;
-            line-height: 30px;
-        }
+    #video_table {
+        margin-top: 20px;
+    }
+
+    #video_table tr td {
+        text-align: left;
+        margin-top: 0;
+        display: block;
+        float: left;
+    }
+
+    #video_box {
+        width: 275px;
+        height: 170px;
+        display: block;
+    }
+
+    #video,
+    #add_video {
+        width: 275px;
+        height: 125px;
+        border: 1px solid #b2b2b2;
+    }
+
+    #video_info {
+        width: 275px;
+        height: 25px;
+        margin-top: 10px;
+    }
+
+    #video_title {
+        width: 200px;
+        height: 25px;
+        margin-top: 0;
+        float: left;
+        display: block;
+    }
+
+    #video_like {
+        float: right;
+        width: 20px;
+    }
+
+    #add_video p {
+        width: 275px;
+        height: 125px;
+        font-size: 50px;
+        font-weight: 1px;
+        font-family: 'Courier New', Courier, monospace;
+        line-height: 125px;
+        padding-top: 0;
+        margin-top: 0;
+        color: #b2b2b2;
+        text-align: center;
+        display: block;
+    }
+
+    #tab_calendar {
+        padding-top: 30px;
+    }
+
+    #calendar {
+        margin-top: 20px;
+        width: 575px;
+        height: 375px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+        margin-bottom: 30px;
+    }
+
+    #event_list {
+        margin-top: 20px;
+        width: 575px;
+        height: 275px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+    }
+
+    #event_list_table {
+        width: 575px;
+        height: 250px;
+        margin-top: 15px;
+    }
+
+    #event_list_table tr {
+        display: block;
+        height: 38px;
+        width: 575px;
+    }
+
+    #event_list_table tr td {
+        float: left;
+    }
+
+    #event_title {
+        display: block;
+        width: 90px;
+        height: 30px;
+        margin-left: 15px;
+        line-height: 30px;
+    }
+
+    #event_start_date,
+    #event_end_date {
+        display: block;
+        width: 155px;
+        height: 30px;
+        margin-left: 8px;
+        line-height: 30px;
+    }
+
+    #event_connect {
+        display: block;
+        width: 15px;
+        height: 30px;
+        margin-left: 12px;
+        line-height: 30px;
+    }
+
+    #event_button {
+        display: block;
+        width: 80px;
+        height: 30px;
+        float: left;
+        line-height: 30px;
+        margin-left: 12px;
+    }
+
+    #event_button input {
+        width: 75px;
+        height: 24px;
+        display: block;
+        font-size: 13px;
+        margin-top: 3px;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+    }
+
+    #event_page {
+        display: block;
+        width: 460px;
+        height: 30px;
+        margin-left: 15px;
+        line-height: 30px;
+    }
+
+    #page_box {
+        width: 460px;
+        height: 30px;
+        text-align: center;
+        margin-left: 200px;
+        margin-top: 30px;
+    }
+
+    #page {
+        width: 125px;
+        height: 30px;
+        display: block;
+    }
+
+    #page input {
+        width: 15px;
+        height: 8px;
+        padding-top: -5px;
+        font-size: 16px;
+    }
+
+    #cur {
+        font-size: 15px;
+        display: inline;
+        margin-left: 0px;
+        font-weight: bold;
+    }
+
+    #add_event_button {
+        display: block;
+        width: 75px;
+        height: 30px;
+        margin-top: 30px;
+        line-height: 30px;
+    }
+
+    #add_event_button input {
+        width: 75px;
+        height: 24px;
+        display: block;
+        font-size: 13px;
+        padding-left: 5px;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+    }
 
 
-        #mask{
-            width: 100%;
-            height: 1200px;
-            display: none;
-            background-color: rgba(0,0,0,0.7);
-            position: absolute;
-            top: 0;
-        }
-        #mask_box{
-            width: 300px;
-            height: 260px;
-            margin-top: 200px;
-            background-color: rgb(232, 242, 254);
-        }
-        #mask_box form div{
-            margin-top: 15px;
-        }
-        #mask_title{
-            height: 50px;
-            width: 100%;
-            line-height: 50px;
-            color: rgb(232, 242, 254);
-            background-color: #162f59;
-            position: relative;
-        }
-        #newName_input{
-            width: 168px;
-            height: 20px;
-            border-radius: 5px;
-            border: 1px solid #b2b2b2; 
-        }
-        #mask_button_box{
-            padding-top: 15px;
-        }
-        #mask_button{
-            width: 75px;
-            height: 30px;
-            font-size: 14px;
-        }
+    #course_list {
+        margin-top: 20px;
+        width: 625px;
+        height: 600px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
 
-        #mask_video{
-            width: 100%;
-            height: 1200px;
-            display: none;
-            background-color: rgba(0,0,0,0.7);
-            position: absolute;
-            top: 0;
-        }
-        #mask_video_box{
-            width: 450px;
-            height: 350px;
-            margin-top: 200px;
-            background-color: rgb(232, 242, 254);
-        }
-        #mask_video_table{
-            width: 281px;
-            height: 325px;
-            margin-top: 20px;
-            display: block;
-        }
-        #mask_video_video{
-            display: block;
-            width: 281px;
-            height: 150px;
-        }
-        #mask_video_video td{
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            display: block;
-            width: 281px;
-            height: 150px;
-        }
-        #mask_video_category, #mask_video_url{
-            left: 0;
-            right: 0;
-            margin: auto;
-            display: block;
-            width: 290px;
-            height: 45px;
-        }
-        #new_video{
-            width: 275px;
-            height: 125px;
-            margin-left: 0;
-            background-color: cadetblue;
-        }
-        #mask_video_category input{
-            width: 270px;
-            height: 24px;
-            left: 0;
-            right: 0;
-            margin: auto;
-            display: block;
-            margin-left: -2px;
-        }
-        #url{
-            width: 200px;
-            height: 24px;
-            left: 0;
-            display: block;
-            float: left;
-            margin-left: -1px;
-            margin-right: 10px;
-        }
-        #choose{
-            width: 60px;
-            height: 30px;
-            display: block;
-            border-radius: 3px;
-            border: 1px solid #b2b2b2;
-            background-color: whitesmoke;
-        }
-        #mask_video_button{
-            padding-top: 15px;
-        }
+    #course_table {
+        width: 625px;
+        height: 600px;
+        margin-top: 15px;
+    }
 
-        #mask_calendar{
-            width: 100%;
-            height: 1200px;
-            display: none;
-            background-color: rgba(0,0,0,0.7);
-            position: absolute;
-            top: 0;
-        }
-        #mask_calendar_box{
-            width: 450px;
-            height: 350px;
-            margin-top: 600px;
-            background-color: rgb(232, 242, 254);
-        }
-        #mask_calendar_table{
-            width: 281px;
-            height: 325px;
-            margin-top: 30px;
-            display: block;
-        }
-        #mask_calendar_title, #mask_calendar_start, #mask_calendar_end{
-            width: 280px;
-            height: 55px;
-            line-height: 50px;
-            position: relative;
-        }
-        #add_event_title{
-            width: 75px;
-            height: 55px;
-        }
-        #add_event_event, #add_event_time{
-            width: 190px;
-            height: 25px;
-        }
-        #add_event_event input, #add_event_time input{
-            width: 190px;
-            height: 25px;
-            font-size: 13px;
-        }
-        #mask_calendar_button td{
-            padding-top: 30px;
-        }
- 
+    #course_table tr {
+        display: block;
+        height: 40px;
+        width: 625px;
+        margin-top: 10px;
+    }
 
-        div.card{
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-    </style>
+    #course_table tr td {
+        display: block;
+        float: left;
+    }
 
-    <body>
+    #course_table_title {
+        display: block;
+        width: 110px;
+        height: 40x;
+        line-height: 40px;
+    }
 
-    <div id = "top">
-        <div id = "top_content">
+    #course_table_tutorName {
+        display: block;
+        width: 90px;
+        height: 40px;
+        margin-left: 15px;
+        line-height: 40px;
+    }
+
+    #course_table_tutorName {
+        margin-right: 25px;
+    }
+
+    #course_table_date {
+        margin-right: 20px;
+    }
+
+    #course_table_date,
+    #course_table_date div {
+        display: block;
+        width: 160px;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    #course_start_time {
+        margin-top: 5px;
+    }
+
+    #course_end_time {
+        margin-top: 0;
+    }
+
+    #course_start_time,
+    #course_end_time {
+        display: block;
+        width: 155px;
+        height: 0px;
+        margin-left: 8px;
+        line-height: 20px;
+        float: left;
+    }
+
+    #course_table_button {
+        display: block;
+        width: 180px;
+        height: 40px;
+        float: left;
+        line-height: 40px;
+        margin-top: 7px;
+        margin-left: 12px;
+    }
+
+    #course_rate,
+    #course_cancel {
+        width: 75px;
+        height: 24px;
+        display: block;
+        font-size: 13px;
+        margin-top: 3px;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+        float: left;
+    }
+
+    #course_rate {
+        margin-right: 10px;
+    }
+
+    #course_page {
+        display: block;
+        width: 400px;
+        height: 30px;
+        line-height: 30px;
+    }
+
+
+    #mask {
+        width: 100%;
+        height: 1200px;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 0;
+    }
+
+    #mask_box {
+        width: 300px;
+        height: 260px;
+        margin-top: 200px;
+        background-color: rgb(232, 242, 254);
+    }
+
+    #mask_box form div {
+        margin-top: 15px;
+    }
+
+    #mask_title {
+        height: 50px;
+        width: 100%;
+        line-height: 50px;
+        color: rgb(232, 242, 254);
+        background-color: #162f59;
+        position: relative;
+    }
+
+    #newName_input {
+        width: 168px;
+        height: 20px;
+        border-radius: 5px;
+        border: 1px solid #b2b2b2;
+    }
+
+    #mask_button_box {
+        padding-top: 15px;
+    }
+
+    #mask_button {
+        width: 75px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    #mask_video {
+        width: 100%;
+        height: 1200px;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 0;
+    }
+
+    #mask_video_box {
+        width: 450px;
+        height: 350px;
+        margin-top: 200px;
+        background-color: rgb(232, 242, 254);
+    }
+
+    #mask_video_table {
+        width: 281px;
+        height: 325px;
+        margin-top: 20px;
+        display: block;
+    }
+
+    #mask_video_video {
+        display: block;
+        width: 281px;
+        height: 150px;
+    }
+
+    #mask_video_video td {
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: block;
+        width: 281px;
+        height: 150px;
+    }
+
+    #mask_video_category,
+    #mask_video_url {
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: block;
+        width: 290px;
+        height: 45px;
+    }
+
+    #new_video {
+        width: 275px;
+        height: 125px;
+        margin-left: 0;
+        background-color: cadetblue;
+    }
+
+    #mask_video_category input {
+        width: 270px;
+        height: 24px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: block;
+        margin-left: -2px;
+    }
+
+    #url {
+        width: 200px;
+        height: 24px;
+        left: 0;
+        display: block;
+        float: left;
+        margin-left: -1px;
+        margin-right: 10px;
+    }
+
+    #choose {
+        width: 60px;
+        height: 30px;
+        display: block;
+        border-radius: 3px;
+        border: 1px solid #b2b2b2;
+        background-color: whitesmoke;
+    }
+
+    #mask_video_button {
+        padding-top: 15px;
+    }
+
+    #mask_calendar {
+        width: 100%;
+        height: 1200px;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 0;
+    }
+
+    #mask_calendar_box {
+        width: 450px;
+        height: 350px;
+        margin-top: 600px;
+        background-color: rgb(232, 242, 254);
+    }
+
+    #mask_calendar_table {
+        width: 281px;
+        height: 325px;
+        margin-top: 30px;
+        display: block;
+    }
+
+    #mask_calendar_title,
+    #mask_calendar_start,
+    #mask_calendar_end {
+        width: 280px;
+        height: 55px;
+        line-height: 50px;
+        position: relative;
+    }
+
+    #add_event_title {
+        width: 75px;
+        height: 55px;
+    }
+
+    #add_event_event,
+    #add_event_time {
+        width: 190px;
+        height: 25px;
+    }
+
+    #add_event_event input,
+    #add_event_time input {
+        width: 190px;
+        height: 25px;
+        font-size: 13px;
+    }
+
+    #mask_calendar_button td {
+        padding-top: 30px;
+    }
+
+
+    div.card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+</style>
+
+<body>
+
+    <div id="top">
+        <div id="top_content">
             <ul>
                 <li id="signup"><a href="signup.html">Sign Up</a></li>
-                <li> / </li>
+                <li id="top1"> / </li>
                 <li id="login"><a href="login.html">Log In</a></li>
-                <li> / </li>
-                <li id = "user">Welcome, <a href="personal.html">username</a></li>
-                <li> / </li>
-                <li id = "signout" onclick="signout()">Sign Out</li>
+                <li id="top2"> / </li>
+                <li id="user">Welcome, &nbsp;&nbsp;<a href="personal.html" id="username"></a></li>
+                <li id="top3"> / </li>
+                <li id="signout" onclick="signout()">Sign Out</li>
             </ul>
         </div>
     </div>
-    <div id = "menu">
-        <div id = "menu_content">
+    <div id="menu">
+        <div id="menu_content">
             <ul>
                 <li id="menu_homepage"><a href="main.html">Homepage</a></li>
                 <li id="menu_match"><a href="match.html">Match</a></li>
-                <li id = "menu_search"><a href="search.html">Search</a></li>
-                <li id = "menu_rate"><a href="rate.html">Rate</a></li>
-                <li id = "menu_course"><a href="course.html">Course</a></li>
-                <li id = "menu_personal"><a href="personal.html">Personal</a></li>
+                <li id="menu_search"><a href="search.html">Search</a></li>
+                <li id="menu_rate"><a href="rate.html">Rate</a></li>
+                <li id="menu_course"><a href="course.html">Course</a></li>
+                <li id="menu_personal"><a href="personal.html">Personal</a></li>
             </ul>
         </div>
     </div>
@@ -892,19 +1039,23 @@
                                         <table>
                                             <tr>
                                                 <td id="info_skill_title">Basketball</td>
-                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                                <td id="info_skill_button"><input type="button" value="Remove"
+                                                        onclick="remove_skill()"></td>
                                             </tr>
                                             <tr>
                                                 <td id="info_skill_title">Basketball</td>
-                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                                <td id="info_skill_button"><input type="button" value="Remove"
+                                                        onclick="remove_skill()"></td>
                                             </tr>
                                             <tr>
                                                 <td id="info_skill_title">Basketball</td>
-                                                <td id="info_skill_button"><input type="button" value="Remove" onclick="remove_skill()"></td>
+                                                <td id="info_skill_button"><input type="button" value="Remove"
+                                                        onclick="remove_skill()"></td>
                                             </tr>
 
                                             <tr>
-                                                <td id="info_skill_add_input"><input type="text" placeholder="Enter a skill you owned."></td>
+                                                <td id="info_skill_add_input"><input type="text"
+                                                        placeholder="Enter a skill you owned."></td>
                                                 <td id="info_skill_add_button"><input type="button" value="Add"></td>
                                             </tr>
                                         </table>
@@ -919,19 +1070,23 @@
                                         <table>
                                             <tr>
                                                 <td id="info_interest_title">Basketball</td>
-                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                                <td id="info_interest_button"><input type="button" value="Remove"
+                                                        onclick="remove_interest()"></td>
                                             </tr>
                                             <tr>
                                                 <td id="info_interest_title">Basketball</td>
-                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                                <td id="info_interest_button"><input type="button" value="Remove"
+                                                        onclick="remove_interest()"></td>
                                             </tr>
                                             <tr>
                                                 <td id="info_interest_title">Basketball</td>
-                                                <td id="info_interest_button"><input type="button" value="Remove" onclick="remove_interest()"></td>
+                                                <td id="info_interest_button"><input type="button" value="Remove"
+                                                        onclick="remove_interest()"></td>
                                             </tr>
 
                                             <tr>
-                                                <td id="info_interest_add_input"><input type="text" placeholder="Enter an interest."></td>
+                                                <td id="info_interest_add_input"><input type="text"
+                                                        placeholder="Enter an interest."></td>
                                                 <td id="info_interest_add_button"><input type="button" value="Add"></td>
                                             </tr>
                                         </table>
@@ -945,8 +1100,9 @@
                                 <tr>
                                     <td id="info_title">Gender</td>
                                     <td id="info_gender">
-                                        <input name="gender" type="radio" value="Male">Male
-                                        <input name="gender" type="radio" value="Female" style="margin-left:30px;">Female
+                                        <input name="gender" type="radio" value="Male" id="info_gender_male">Male
+                                        <input name="gender" type="radio" value="Female" style="margin-left:30px;"
+                                            id="info_gender_female">Female
                                     </td>
                                 </tr>
                                 <tr>
@@ -977,14 +1133,14 @@
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">   
+                                            <img id="video_like" src="img/like.png">
                                         </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">   
+                                            <img id="video_like" src="img/like.png">
                                         </div>
                                     </td>
                                 </tr>
@@ -993,20 +1149,22 @@
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">   
+                                            <img id="video_like" src="img/like.png">
                                         </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">   
+                                            <img id="video_like" src="img/like.png">
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="video_box">
-                                        <div id="add_video" onclick="addVideo()"><p>+</p></div>
+                                        <div id="add_video" onclick="addVideo()">
+                                            <p>+</p>
+                                        </div>
                                     </td>
                                     <td>&nbsp;</td>
                                 </tr>
@@ -1047,9 +1205,11 @@
                                         <td id="event_page" colspan="4">
                                             <div id="page_box">
                                                 <div id="page">
-                                                        <input onclick="prev(2)" value="↢">
-                                                        &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;" id="all">all</div>&nbsp;&nbsp;
-                                                        <input onclick="next(2)" value="↣">
+                                                    <input onclick="prev(2)" value="↢">
+                                                    &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div
+                                                        style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;"
+                                                        id="all">all</div>&nbsp;&nbsp;
+                                                    <input onclick="next(2)" value="↣">
                                                 </div>
                                             </div>
                                         </td>
@@ -1073,7 +1233,7 @@
                                                 <p id="course_start_time">2019-02-02 09:21 A.M.</p>
                                                 <p id="course_end_time">2019-02-02 09:30 A.M.</p>
                                             </div>
-                                        </td> 
+                                        </td>
                                         <td id="course_table_button">
                                             <input id="course_rate" type="button" value="Rate" onclick="rate()">
                                             <input id="course_cancel" type="button" value="Cancel">
@@ -1111,9 +1271,11 @@
                                         <td id="course_page" colspan="4">
                                             <div id="page_box">
                                                 <div id="page">
-                                                        <input onclick="prev(2)" value="↢">
-                                                        &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;" id="all">all</div>&nbsp;&nbsp;
-                                                        <input onclick="next(2)" value="↣">
+                                                    <input onclick="prev(2)" value="↢">
+                                                    &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div
+                                                        style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;"
+                                                        id="all">all</div>&nbsp;&nbsp;
+                                                    <input onclick="next(2)" value="↣">
                                                 </div>
                                             </div>
                                         </td>
@@ -1134,7 +1296,7 @@
         <div id="mask_box">
             <div id="mask_title">
                 <h2>Change Username</h2>
-            </div>           
+            </div>
             <form>
                 <div id="oldNmae_title">Current username</div>
                 <div id="oldName">username</div>
@@ -1158,7 +1320,9 @@
             <form>
                 <table id="mask_video_table">
                     <tr id="mask_video_video">
-                        <td><div id="new_video"></div></td>
+                        <td>
+                            <div id="new_video"></div>
+                        </td>
                     </tr>
                     <tr id="mask_video_category">
                         <td><input type="text" placeholder="Enter the category of this video"></td>
@@ -1172,7 +1336,8 @@
                     <tr id="mask_video_button">
                         <td>
                             <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
-                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px" onclick="quit()">
+                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px"
+                                onclick="quit()">
                         </td>
                     </tr>
                 </table>
@@ -1202,7 +1367,8 @@
                     <tr id="mask_calendar_button">
                         <td colspan="2">
                             <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
-                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px" onclick="quit()">
+                            <input id="mask_button" type="button" value="Cancel" style="margin-left:30px"
+                                onclick="quit()">
                         </td>
                     </tr>
                 </table>
@@ -1214,24 +1380,24 @@
 </body>
 <script>
 
-    function changeUsername(){
+    function changeUsername() {
         $("#mask").fadeIn(600);
     }
-    function addVideo(){
+    function addVideo() {
         $("#mask_video").fadeIn(600);
     }
-    function addEvent(){
+    function addEvent() {
         $("#mask_calendar").fadeIn(600);
     }
-	function quit(){
-		$("#mask").fadeOut(600);
+    function quit() {
+        $("#mask").fadeOut(600);
         $("#mask_video").fadeOut(600);
         $("#mask_calendar").fadeOut(600);
-	}
-    function rate(){
+    }
+    function rate() {
         window.location.href = 'rate.html';
     }
-    function playVideo(){
+    function playVideo() {
         window.location.href = 'video.html';
     }
 
@@ -1245,7 +1411,7 @@
     tabs[2].style.display = 'none';
     tabs[3].style.display = 'none';
 
-    spans[0].onclick = function() {
+    spans[0].onclick = function () {
         spans[0].style.display = 'block';
         spans[0].style.background = '#162f59';
         spans[0].style.color = '#e5f2f8';
@@ -1254,17 +1420,17 @@
         spans[1].style.background = '';
         spans[1].style.color = '';
         tabs[1].style.display = 'none';
-        
+
         spans[2].style.background = '';
         spans[2].style.color = '';
         tabs[2].style.display = 'none';
-        
+
         spans[3].style.background = '';
         spans[3].style.color = '';
         tabs[3].style.display = 'none';
     }
 
-    spans[1].onclick = function() {
+    spans[1].onclick = function () {
         spans[1].style.display = 'block';
         spans[1].style.background = '#162f59';
         spans[1].style.color = '#e5f2f8';
@@ -1273,22 +1439,22 @@
         spans[0].style.background = '';
         spans[0].style.color = '';
         tabs[0].style.display = 'none';
-        
+
         spans[2].style.background = '';
         spans[2].style.color = '';
         tabs[2].style.display = 'none';
-        
+
         spans[3].style.background = '';
         spans[3].style.color = '';
         tabs[3].style.display = 'none';
     }
 
-    spans[2].onclick = function() {
+    spans[2].onclick = function () {
         spans[2].style.display = 'block';
         spans[2].style.background = '#162f59';
         spans[2].style.color = '#e5f2f8';
         tabs[2].style.display = 'block';
-        
+
         spans[0].style.background = '';
         spans[0].style.color = '';
         tabs[0].style.display = 'none';
@@ -1296,18 +1462,18 @@
         spans[1].style.background = '';
         spans[1].style.color = '';
         tabs[1].style.display = 'none';
-        
+
         spans[3].style.background = '';
         spans[3].style.color = '';
         tabs[3].style.display = 'none';
     }
 
-    spans[3].onclick = function() {
+    spans[3].onclick = function () {
         spans[3].style.display = 'block';
         spans[3].style.background = '#162f59';
         spans[3].style.color = '#e5f2f8';
         tabs[3].style.display = 'block';
-        
+
         spans[0].style.background = '';
         spans[0].style.color = '';
         tabs[0].style.display = 'none';
@@ -1315,37 +1481,38 @@
         spans[1].style.background = '';
         spans[1].style.color = '';
         tabs[1].style.display = 'none';
-        
+
         spans[2].style.background = '';
         spans[2].style.color = '';
         tabs[2].style.display = 'none';
     }
 
 
-    
-	function prev(num) {
-		var cur =parseInt($("#cur").html());
-		var all =parseInt($("#all").html());
-		if(num == 1) {
-			if(cur <= 1) {
-				return ;
-			} else {
-				cur=cur-1;
-			}
-		}
-		// window.location.href="calendar.action?cur="+cur;
-	}
-	function next(num) {
-		var cur =parseInt($("#cur").html());
-		var all =parseInt($("#all").html());
-		if(num == 1) {
-			if(cur >= all) {
-				return ;
-			} else {
-				cur=cur+1;
-			}
-		}
-		// window.location.href="calendar.action?cur="+cur;
-	}
+
+    function prev(num) {
+        var cur = parseInt($("#cur").html());
+        var all = parseInt($("#all").html());
+        if (num == 1) {
+            if (cur <= 1) {
+                return;
+            } else {
+                cur = cur - 1;
+            }
+        }
+        // window.location.href="calendar.action?cur="+cur;
+    }
+    function next(num) {
+        var cur = parseInt($("#cur").html());
+        var all = parseInt($("#all").html());
+        if (num == 1) {
+            if (cur >= all) {
+                return;
+            } else {
+                cur = cur + 1;
+            }
+        }
+        // window.location.href="calendar.action?cur="+cur;
+    }
 </script>
+
 </html>
