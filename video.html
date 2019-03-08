@@ -21,6 +21,35 @@
     </script>
 
     <script type="text/javascript">
+        window.onload = function (){
+            firebase.auth().onAuthStateChanged(function(user) {
+                if(user){
+                    var email = user.email;
+                    var gender = user.gender;
+                    var username = user.username;
+                    var phone = user.phone;
+                    var interests = user.interests;
+                    var skills = user.skills;
+             
+
+                    
+                    document.getElementById('signup').style.display = 'none';
+                    document.getElementById('login').style.display = 'none';
+                    document.getElementById('top1').style.display = 'none';
+                    document.getElementById('top2').style.display = 'none';
+                    document.getElementById('user').style.display = 'block';
+                    document.getElementById('top3').style.display = 'block';
+                    document.getElementById('signout').style.display = 'block';
+                    
+                    if(username){
+                        document.getElementById('username').textContent = username;
+                    }   
+                    else if(email){
+                        document.getElementById('username').textContent = email;
+                    }
+                }
+            });
+        };
         function signout(){
 
             firebase.auth().signOut().then(function() {
@@ -30,19 +59,19 @@
                 // An error happened.
                     alert(error);
                 });
-            
+
         }
     </script>
     <style>
 
-        #top{
+#top{
             background-color: white;
             width: 100%;
             height: 31px;
             position: relative;
         }
         #top_content{
-            width: 1024px;
+            width: 900px;
             height: 30px;
             position: absolute;
             left: 0;
@@ -51,7 +80,6 @@
         }
         #top ul{
             display: block;
-            width: 370px;
             height: 30px;
             float: right;
             line-height: 30px;
@@ -76,10 +104,11 @@
             color: rgb(110, 110, 110);
             font-size: 14px;
             display: block;
-            width: 65px;
             height: 30px;
             line-height: 30px;
             text-align: center;
+            margin-left: 10px;
+            margin-right: 10px;
         }
         #user{
             float: left;
@@ -88,10 +117,16 @@
             color: rgb(110, 110, 110);
             font-size: 14px;
             display: block;
-            width: 150px;
             height: 30px;
             line-height: 30px;
             text-align: center;
+            margin-left: 10px;
+        }
+        #signout, #user, #top2, #top3{
+            display: none;
+        }
+        #username{
+            margin-right: 10px;
         }
 
         #menu{
