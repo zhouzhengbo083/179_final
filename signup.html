@@ -6,7 +6,7 @@
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
-    <script>
+    <script type = "text/javascript">
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
@@ -33,6 +33,7 @@
         // [START createwithemail]
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
             // Handle Errors here.
+            alert("---");
             var errorCode = error.code;
             var errorMessage = error.message;
             // [START_EXCLUDE]
