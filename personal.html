@@ -4,6 +4,7 @@
 <head>
     <title>Hobby-ever</title>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 
 </head>
@@ -19,22 +20,14 @@
         messagingSenderId: "863057579113"
     };
     firebase.initializeApp(config);
-</script>
+    var firestore = firebase.firestore();
 
-<script type="text/javascript">
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                var email = user.email;
-                var credit = user.credit;
-                var gender = user.gender;
-                var username = user.username;
-                var phone = user.phone;
-                var interests = user.interests;
-                var skills = user.skills;
-                var rate = user.rate;
-
-
+                var uid = user.uid;
+                var email, credit, gender, username, phone, interests, skills, rate;
+                const docRef = firestore.doc("users/" + uid);
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -44,17 +37,70 @@
                 document.getElementById('top3').style.display = 'block';
                 document.getElementById('signout').style.display = 'block';
 
-                if (username) {
-                    document.getElementById('username').textContent = username;
-                }
-                else if (email) {
-                    document.getElementById('username').textContent = email;
-                }
+                docRef.get().then(function(doc) {
+                    if(doc && doc.exists){
+                        const curData = doc.data();
+                        user.email = curData.email;
+                        user.credit = curData.credit;
+                        user.gender = curData.gender;
+                        user.username = curData.username;
+                        user.phone = curData.phone;
+                        user.interests = curData.interests;
+                        user.skills = curData.skills;
+                        user.rate = curData.rate;
 
+                        console.log("docRef");
+                        loadPage(user);
+                    }
+                }).catch(function(error) {
+                    alert("Got an error: " + error);
+                }) ; 
+
+
+                loadPage(user);
 
             }
         });
     };
+
+    function loadPage(user) {
+        var phone = user.phone;
+        var email = user.email;
+        var credit = user.credit;
+        var gender = user.gender;
+        var username = user.username;
+        var interests = user.interests;
+        var skills = user.skills;
+        var rate = user.rate;
+
+        console.log(user);
+        alert(user.phone);
+
+        if (username) {
+            document.getElementById('username').textContent = username;
+        }
+        else if (email) {
+            document.getElementById('username').textContent = email;
+        }
+
+        if (gender == 'male') document.getElementById('info_gender_male').checked == true;
+        else if (gender == 'female') document.getElementById('info_gender_female').checked == true;
+
+        if(phone) document.getElementById('phone_input').value = phone;
+        else document.getElementById('phone_input').value = '';
+
+        if(credit) document.getElementById('info_credit').value = credit;
+        else document.getElementById('info_credit').textContent = '0';
+
+        if(credit) document.getElementById('info_rate').value = rate;
+        else document.getElementById('info_rate').textContent = '0';
+
+        document.getElementById('info_username').textContent = username;
+        document.getElementById('info_skill_title').textContent = skills;
+        document.getElementById('info_interest_title').textContent = interests;
+        document.getElementById('email_input').value = email;
+    }
+
     function signout() {
 
         firebase.auth().signOut().then(function () {
@@ -66,9 +112,50 @@
         });
 
     }
+
+    function updateInfo() {
+        var user = firebase.auth().currentUser;
+        var uid = user.uid;
+        var gender = user.gender;
+        var email = document.getElementById("email_input").value;
+        var phone = document.getElementById("phone_input").value; 
+        const docRef = firestore.doc("users/" + uid);
+
+        if (document.getElementById('info_gender_male').checked) gender = 'male';
+        else if (document.getElementById('info_gender_female').checked) gender = 'female';
+
+        docRef.set({
+            email: email,
+            phone: phone,
+            gender: gender
+        }).then(function(){
+            alert("Status saved");
+        }).catch(function(error) {
+            alert("Got an error: " + error);
+        }) ; 
+    }
+
+    function updateUsername() {
+        alert("test!!!");
+        
+        const docRef = firestore.doc("users/1");
+        var usernameField = document.getElementById('oldName').textContent;
+        var newUsername = document.getElementById('newName_input').value;
+         
+        alert("We are going to write data into firebase");
+        docRef.set({
+            user_name: newUsername
+        }).then(function(){
+            alert("Status saved!");
+        }).catch(function(error) {
+            alert("Got an error: " + error);
+        });
+        
+        // alert(test);
+    }
 </script>
 <style>
-    #top {
+    #top { 
         background-color: white;
         width: 100%;
         height: 31px;
@@ -1118,7 +1205,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td id="info_submit"><input type="button" value="Submit"></td>
+                                    <td id="info_submit"><input type="button" value="Submit" onclick="updateInfo()">
+                                    </td>
                                     <td id="info_reset"><input type="button" value="Reset"></td>
                                 </tr>
                             </table>
@@ -1305,7 +1393,7 @@
                 <div id="newName"><input id="newName_input" type="text"></div>
 
                 <div id="mask_button_box">
-                    <input id="mask_button" type="submit" value="Submit" style="margin-right:10px;">
+                    <input id="mask_button" type="submit" value="Submit" style="margin-right:10px;" onclick="updateUsername()">
                     <input id="mask_button" type="button" value="cancel" style="margin-left:10px;" onclick="quit()">
                 </div>
             </form>
