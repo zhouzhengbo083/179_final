@@ -37,8 +37,8 @@
                 document.getElementById('top3').style.display = 'block';
                 document.getElementById('signout').style.display = 'block';
 
-                docRef.get().then(function(doc) {
-                    if(doc && doc.exists){
+                docRef.get().then(function (doc) {
+                    if (doc && doc.exists) {
                         const curData = doc.data();
                         user.email = curData.email;
                         user.credit = curData.credit;
@@ -49,12 +49,11 @@
                         user.skills = curData.skills;
                         user.rate = curData.rate;
 
-                        console.log("docRef");
                         loadPage(user);
                     }
-                }).catch(function(error) {
+                }).catch(function (error) {
                     alert("Got an error: " + error);
-                }) ; 
+                });
 
 
                 loadPage(user);
@@ -73,9 +72,6 @@
         var skills = user.skills;
         var rate = user.rate;
 
-        console.log(user);
-        alert(user.phone);
-
         if (username) {
             document.getElementById('username').textContent = username;
         }
@@ -83,22 +79,23 @@
             document.getElementById('username').textContent = email;
         }
 
-        if (gender == 'male') document.getElementById('info_gender_male').checked == true;
-        else if (gender == 'female') document.getElementById('info_gender_female').checked == true;
+        if (gender == 'male') document.getElementById('info_gender_male').checked = true;
+        else if (gender == 'female') document.getElementById('info_gender_female').checked = true;
 
-        if(phone) document.getElementById('phone_input').value = phone;
+        if (phone) document.getElementById('phone_input').value = phone;
         else document.getElementById('phone_input').value = '';
 
-        if(credit) document.getElementById('info_credit').value = credit;
+        if (credit) document.getElementById('info_credit').value = credit;
         else document.getElementById('info_credit').textContent = '0';
 
-        if(credit) document.getElementById('info_rate').value = rate;
+        if (credit) document.getElementById('info_rate').value = rate;
         else document.getElementById('info_rate').textContent = '0';
 
         document.getElementById('info_username').textContent = username;
         document.getElementById('info_skill_title').textContent = skills;
         document.getElementById('info_interest_title').textContent = interests;
         document.getElementById('email_input').value = email;
+        document.getElementById('oldName').textContent = username;
     }
 
     function signout() {
@@ -116,46 +113,87 @@
     function updateInfo() {
         var user = firebase.auth().currentUser;
         var uid = user.uid;
-        var gender = user.gender;
+        var gender;
+        var credit = document.getElementById("info_credit").textContent;
+        var rate = document.getElementById("info_rate").textContent;
+        var username = document.getElementById("info_username").textContent;
         var email = document.getElementById("email_input").value;
-        var phone = document.getElementById("phone_input").value; 
+        var phone = document.getElementById("phone_input").value;
+        var interests = document.getElementById("info_interest_title").textContent;
+        var skills = document.getElementById("info_skill_title").textContent;
         const docRef = firestore.doc("users/" + uid);
 
         if (document.getElementById('info_gender_male').checked) gender = 'male';
         else if (document.getElementById('info_gender_female').checked) gender = 'female';
 
+        if (phone) document.getElementById('phone_input').value = phone;
+        else document.getElementById('phone_input').value = '';
+
+        if (credit) document.getElementById('info_credit').value = credit;
+        else document.getElementById('info_credit').textContent = '0';
+
+        if (credit) document.getElementById('info_rate').value = rate;
+        else document.getElementById('info_rate').textContent = '0';
+
         docRef.set({
             email: email,
             phone: phone,
-            gender: gender
-        }).then(function(){
+            gender: gender,
+            interests: interests,
+            skills: skills,
+            credit: credit,
+            rate: rate,
+            username: username
+        }).then(function () {
             alert("Status saved");
-        }).catch(function(error) {
+        }).catch(function (error) {
             alert("Got an error: " + error);
-        }) ; 
+        });
+
+        user.email = email;
+        user.phone = phone;
+        user.gender = gender;
     }
 
     function updateUsername() {
-        alert("test!!!");
-        
-        const docRef = firestore.doc("users/1");
-        var usernameField = document.getElementById('oldName').textContent;
+
+        var user = firebase.auth().currentUser;
+        var uid = user.uid;
+        var gender = user.gender;
+        var interests = user.interests;
+        var skills = user.skills;
+        var credit = user.credit;
+        var rate = user.rate;
+        var username = user.username;
+        var email = document.getElementById("email_input").value;
+        var phone = document.getElementById("phone_input").value;
         var newUsername = document.getElementById('newName_input').value;
-         
+        const docRef = firestore.doc("users/" + uid);
+        user.username = newUsername;
+
+
+
         alert("We are going to write data into firebase");
         docRef.set({
-            user_name: newUsername
-        }).then(function(){
-            alert("Status saved!");
-        }).catch(function(error) {
+            email: email,
+            phone: phone,
+            gender: gender,
+            interests: interests,
+            skills: skills,
+            credit: credit,
+            rate: rate,
+            username: newUsername
+        }).then(function () {
+            alert("Status saved");
+        }).catch(function (error) {
             alert("Got an error: " + error);
         });
-        
-        // alert(test);
+        document.getElementById("mask").style.display = 'none';
+        loadPage(user);
     }
 </script>
 <style>
-    #top { 
+    #top {
         background-color: white;
         width: 100%;
         height: 31px;
@@ -485,18 +523,19 @@
         border-bottom: 1px solid #b2b2b2;
         width: 600px;
         height: 40px;
+        margin-top: 45px;
     }
 
 
     #info_table {
         width: 600px;
-        margin-top: 15px;
+        margin-top: 5px;
     }
 
     #info_table tr {
         margin-top: 8px;
         display: block;
-        height: 40px;
+        height: 30px;
         width: 600px;
     }
 
@@ -1110,6 +1149,30 @@
                                 <td id="info_username_modify" onclick="changeUsername()">(modify)</td>
                             </tr>
                             <tr>
+                                <td id="info_title">Gender</td>
+                                <td id="info_gender">
+                                    <input name="gender" type="radio" value="Male" id="info_gender_male"
+                                        checked="false">Male
+                                    <input name="gender" type="radio" value="Female" style="margin-left:30px;"
+                                        id="info_gender_female">Female
+                                </td>
+                            </tr>
+                            <tr>
+                                <td id="info_title">Phone</td>
+                                <td id="info_phone"><input id="phone_input" name="phone" type="text" value=""></td>
+                            </tr>
+                            <tr>
+                                <td id="info_title">E-mail</td>
+                                <td id="info_email"><input id="email_input" name="email" type="text" value=""></td>
+                            </tr>
+                            <tr>
+                                <td id="info_submit"><input type="button" value="Submit" onclick="updateInfo()"></td>
+                                <td id="info_reset"><input type="button" value="Reset"></td>
+                            </tr>
+                        </table>
+                        <div id="separate"></div>
+                        <table id="info_table">
+                            <tr>
                                 <td id="info_title">Credit</td>
                                 <td id="info_credit">num</td>
                                 <td>&nbsp;</td>
@@ -1181,36 +1244,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <div id="separate"></div>
-                        <form>
-                            <table id="info_table">
-                                <tr>
-                                    <td id="info_title">Gender</td>
-                                    <td id="info_gender">
-                                        <input name="gender" type="radio" value="Male" id="info_gender_male">Male
-                                        <input name="gender" type="radio" value="Female" style="margin-left:30px;"
-                                            id="info_gender_female">Female
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="info_title">Phone</td>
-                                    <td id="info_phone">
-                                        <input id="phone_input" name="phone" type="text" value="9511111111">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="info_title">E-mail</td>
-                                    <td id="info_email">
-                                        <input id="email_input" name="email" type="text" value="googlemail@gmail.com">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="info_submit"><input type="button" value="Submit" onclick="updateInfo()">
-                                    </td>
-                                    <td id="info_reset"><input type="button" value="Reset"></td>
-                                </tr>
-                            </table>
-                        </form>
                     </li>
 
                     <li id="tab_video" name="tab">
@@ -1390,10 +1423,11 @@
                 <div id="oldName">username</div>
 
                 <div id="newName_title">Update to</div>
-                <div id="newName"><input id="newName_input" type="text"></div>
+                <div id="newName"><input id="newName_input" type="text" value=""></div>
 
                 <div id="mask_button_box">
-                    <input id="mask_button" type="submit" value="Submit" style="margin-right:10px;" onclick="updateUsername()">
+                    <input id="mask_button" type="button" value="Submit" style="margin-right:10px;"
+                        onclick="updateUsername()">
                     <input id="mask_button" type="button" value="cancel" style="margin-left:10px;" onclick="quit()">
                 </div>
             </form>
