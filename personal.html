@@ -257,7 +257,46 @@
         loadPage(user);
     }
 
-    function remove_skill() {
+    function remove_skill(remove_skill_num) {
+        alert(remove_skill_num);
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.skills = curData.skills;
+                gender = curData.gender;
+                email = curData.email;
+                phone = curData.phone;
+                interests = curData.interests;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+            }
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
+
+        skills = user.skills;
+        skills.splice(remove_skill_num, 1);
+        usersRef.set({
+            email: email,
+            phone: phone,
+            gender: gender,
+            interests: interests,
+            skills: skills,
+            credit: credit,
+            rate: rate,
+            username: username
+        }).then(function () {
+            alert("Delete skills: " + remove_skill_num);
+            // location.reload();
+            var skill_add_row = document.getElementById("skill_add_row");
+            skill_add_row.style.display = 'block';
+        }).catch(function (error) {
+            alert("newSkill : Got an error: " + error);
+        });
 
     }
 
@@ -293,9 +332,9 @@
                 email: email,
                 phone: phone,
                 gender: gender,
-                interests:interests,
-                credit:credit,
-                rate:rate,
+                interests: interests,
+                credit: credit,
+                rate: rate,
                 username: username
             }).then(function () {
                 alert("newSkill saved!");
@@ -315,8 +354,45 @@
         loadPage(user);
     }
 
-    function remove_interest() {
+    function remove_interest(remove_interest_num) {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.interests = curData.interests;
+                gender = curData.gender;
+                email = curData.email;
+                phone = curData.phone;
+                skills = curData.skills;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+            }
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
 
+        interests = user.interests;
+        interests.splice(remove_interest_num, 1);
+        usersRef.set({
+            email: email,
+            phone: phone,
+            gender: gender,
+            interests: interests,
+            skills: skills,
+            credit: credit,
+            rate: rate,
+            username: username
+        }).then(function () {
+            alert("Delete interests: " + remove_interest_num);
+            // location.reload();
+            var interests_add_row = document.getElementById("interests_add_row");
+            interests_add_row.style.display = 'block';
+        }).catch(function (error) {
+            alert("newSkill : Got an error: " + error);
+        });
     }
 
     function add_interest() {
@@ -352,8 +428,8 @@
                 gender: gender,
                 interests: interests,
                 skills: skills,
-                credit:credit,
-                rate:rate,
+                credit: credit,
+                rate: rate,
                 username: username
             }).then(function () {
                 alert("newInterests saved!");
@@ -1372,17 +1448,17 @@
                                             <tr name='skill_row'>
                                                 <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(0)"></td>
                                             </tr>
                                             <tr name='skill_row'>
                                                 <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(1)"></td>
                                             </tr>
                                             <tr name='skill_row'>
                                                 <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(2)"></td>
                                             </tr>
 
                                             <tr id="skill_add_row">
@@ -1405,17 +1481,17 @@
                                             <tr name='interest_row'>
                                                 <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(0)"></td>
                                             </tr>
                                             <tr name='interest_row'>
                                                 <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(1)"></td>
                                             </tr>
                                             <tr name='interest_row'>
                                                 <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(2)"></td>
                                             </tr>
 
                                             <tr id='interests_add_row'>
