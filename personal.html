@@ -3,8 +3,8 @@
 
 <head>
     <title>Hobby-ever</title>
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 
 </head>
@@ -27,7 +27,8 @@
             if (user) {
                 var uid = user.uid;
                 var email, credit, gender, username, phone, interests, skills, rate;
-                const docRef = firestore.doc("users/" + uid);
+                const usersRef = firestore.doc("users/" + uid);
+                const courseRef = firestore.doc("course/1");
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -37,7 +38,7 @@
                 document.getElementById('top3').style.display = 'block';
                 document.getElementById('signout').style.display = 'block';
 
-                docRef.get().then(function (doc) {
+                usersRef.get().then(function (doc) {
                     if (doc && doc.exists) {
                         const curData = doc.data();
                         user.email = curData.email;
@@ -55,7 +56,6 @@
                     alert("Got an error: " + error);
                 });
 
-
                 loadPage(user);
 
             }
@@ -72,6 +72,7 @@
         var skills = user.skills;
         var rate = user.rate;
 
+        //Load personal information
         if (username) {
             document.getElementById('username').textContent = username;
         }
@@ -85,10 +86,10 @@
         if (phone) document.getElementById('phone_input').value = phone;
         else document.getElementById('phone_input').value = '';
 
-        if (credit) document.getElementById('info_credit').value = credit;
+        if (credit) document.getElementById('info_credit').textContent = credit;
         else document.getElementById('info_credit').textContent = '0';
 
-        if (credit) document.getElementById('info_rate').value = rate;
+        if (credit) document.getElementById('info_rate').textContent = rate;
         else document.getElementById('info_rate').textContent = '0';
 
         document.getElementById('info_username').textContent = username;
@@ -96,6 +97,9 @@
         document.getElementById('info_interest_title').textContent = interests;
         document.getElementById('email_input').value = email;
         document.getElementById('oldName').textContent = username;
+
+        // Load course information
+
     }
 
     function signout() {
@@ -110,32 +114,21 @@
 
     }
 
-    function updateInfo() {
-        var user = firebase.auth().currentUser;
+    function setUserInfo(user, username){
         var uid = user.uid;
         var gender;
         var credit = document.getElementById("info_credit").textContent;
         var rate = document.getElementById("info_rate").textContent;
-        var username = document.getElementById("info_username").textContent;
         var email = document.getElementById("email_input").value;
         var phone = document.getElementById("phone_input").value;
         var interests = document.getElementById("info_interest_title").textContent;
         var skills = document.getElementById("info_skill_title").textContent;
-        const docRef = firestore.doc("users/" + uid);
+        const usersRef = firestore.doc("users/" + uid);
 
         if (document.getElementById('info_gender_male').checked) gender = 'male';
         else if (document.getElementById('info_gender_female').checked) gender = 'female';
 
-        if (phone) document.getElementById('phone_input').value = phone;
-        else document.getElementById('phone_input').value = '';
-
-        if (credit) document.getElementById('info_credit').value = credit;
-        else document.getElementById('info_credit').textContent = '0';
-
-        if (credit) document.getElementById('info_rate').value = rate;
-        else document.getElementById('info_rate').textContent = '0';
-
-        docRef.set({
+        usersRef.set({
             email: email,
             phone: phone,
             gender: gender,
@@ -149,10 +142,34 @@
         }).catch(function (error) {
             alert("Got an error: " + error);
         });
+    }
 
-        user.email = email;
-        user.phone = phone;
-        user.gender = gender;
+    function updateInfo() {
+        var user = firebase.auth().currentUser;
+        var uid = user.uid;
+        var gender;
+        var credit = document.getElementById("info_credit").textContent;
+        var rate = document.getElementById("info_rate").textContent;
+        var username = document.getElementById("info_username").textContent;
+        var email = document.getElementById("email_input").value;
+        var phone = document.getElementById("phone_input").value;
+        var interests = document.getElementById("info_interest_title").textContent;
+        var skills = document.getElementById("info_skill_title").textContent;
+        const usersRef = firestore.doc("users/" + uid);
+
+        if (document.getElementById('info_gender_male').checked) gender = 'male';
+        else if (document.getElementById('info_gender_female').checked) gender = 'female';
+
+        if (phone) document.getElementById('phone_input').value = phone;
+        else document.getElementById('phone_input').value = '';
+
+        if (credit) document.getElementById('info_credit').value = credit;
+        else document.getElementById('info_credit').textContent = '0';
+
+        if (credit) document.getElementById('info_rate').value = rate;
+        else document.getElementById('info_rate').textContent = '0';
+
+        setUserInfo(user, username);
     }
 
     function updateUsername() {
@@ -164,30 +181,14 @@
         var skills = user.skills;
         var credit = user.credit;
         var rate = user.rate;
-        var username = user.username;
         var email = document.getElementById("email_input").value;
         var phone = document.getElementById("phone_input").value;
-        var newUsername = document.getElementById('newName_input').value;
+        var username = document.getElementById('newName_input').value;
         const docRef = firestore.doc("users/" + uid);
-        user.username = newUsername;
+        user.username = username;
 
+        setUserInfo(user, username);
 
-
-        alert("We are going to write data into firebase");
-        docRef.set({
-            email: email,
-            phone: phone,
-            gender: gender,
-            interests: interests,
-            skills: skills,
-            credit: credit,
-            rate: rate,
-            username: newUsername
-        }).then(function () {
-            alert("Status saved");
-        }).catch(function (error) {
-            alert("Got an error: " + error);
-        });
         document.getElementById("mask").style.display = 'none';
         loadPage(user);
     }
@@ -1233,7 +1234,6 @@
                                                 <td id="info_interest_button"><input type="button" value="Remove"
                                                         onclick="remove_interest()"></td>
                                             </tr>
-
                                             <tr>
                                                 <td id="info_interest_add_input"><input type="text"
                                                         placeholder="Enter an interest."></td>
