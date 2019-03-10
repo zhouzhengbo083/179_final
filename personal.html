@@ -89,7 +89,6 @@
         if (skills) {
             var skillBlock = document.getElementsByName('skills');
             var skillRow = document.getElementsByName('skill_row');
-            alert("skills.length : " + skills.length);
             skillBlock[0].textContent = skills[0];
             skillBlock[1].textContent = skills[1];
             skillBlock[2].textContent = skills[2];
@@ -101,17 +100,14 @@
                 skillRow[1].style.display = 'none';
                 skillRow[2].style.display = 'none';
             }
-            else {
-                if (!skills[1]) {
-                    skillRow[1].style.display = 'none';
-                    skillRow[2].style.display = 'none';
-                } else {
-                    if (!skills[2]) {
-                        skillRow[2].style.display = 'none';
-                    }
-                }
+            if (!skills[1]) {
+                skillRow[1].style.display = 'none';
+                skillRow[2].style.display = 'none';
             }
-            if(skills.length == 3){
+            if (!skills[2]) {
+                skillRow[2].style.display = 'none';
+            }
+            if (skills.length == 3) {
                 var skill_add_row = document.getElementById("skill_add_row");
                 skill_add_row.style.display = 'none';
             }
@@ -126,13 +122,17 @@
         if (interests) {
             var interestBlock = document.getElementsByName('interest');
             var interestRow = document.getElementsByName('interest_row');
-            alert("interests.length : " + interests.length);
             interestBlock[0].textContent = interests[0];
             interestBlock[1].textContent = interests[1];
             interestBlock[2].textContent = interests[2];
             interestRow[0].style.display = 'block';
             interestRow[1].style.display = 'block';
             interestRow[2].style.display = 'block';
+            if (!interests[0]) {
+                interestRow[0].style.display = 'none';
+                interestRow[1].style.display = 'none';
+                interestRow[2].style.display = 'none';
+            }
             if (!interests[1]) {
                 interestRow[1].style.display = 'none';
                 interestRow[2].style.display = 'none';
@@ -140,7 +140,7 @@
             if (!interests[2]) {
                 interestRow[2].style.display = 'none';
             }
-            if(interests.length == 3){
+            if (interests.length == 3) {
                 var interests_add_row = document.getElementById("interests_add_row");
                 interests_add_row.style.display = 'none';
             }
@@ -180,7 +180,7 @@
 
     }
 
-    function setUserInfo(user, username){
+    function setUserInfo(user, username) {
         var uid = user.uid;
         var gender;
         var credit = document.getElementById("info_credit").textContent;
@@ -271,7 +271,10 @@
                 gender = curData.gender;
                 email = curData.email;
                 phone = curData.phone;
-                // interests = curData.interests;
+                credit = curData.credit;
+                rate = curData.rate;
+                interests = curData.interests;
+                username = curData.username;
                 loadPage(user);
             }
         }).catch(function (error) {
@@ -290,13 +293,14 @@
                 email: email,
                 phone: phone,
                 gender: gender,
-                // interests:interests
+                interests:interests,
+                credit:credit,
+                rate:rate,
+                username: username
             }).then(function () {
                 alert("newSkill saved!");
                 document.getElementById("skill_add_input").value = '';
-                alert(skillArray);
                 if (skillArray == 1) {
-                    alert(skills)
                     var skillRow = document.getElementsByName('skill_row');
                     var skillBlock = document.getElementsByName('skills');
                     skillRow[0].style.display = 'block';
@@ -316,7 +320,57 @@
     }
 
     function add_interest() {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.interests = curData.interests;
+                gender = curData.gender;
+                email = curData.email;
+                phone = curData.phone;
+                skills = curData.skills;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+            }
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
+
+        interests = user.interests;
+        if (!interests) {
+            interests = new Array();
+        }
         var newinterest = document.getElementById("interest_add_input").value;
+        if (newinterest) {
+            interestsArray = interests.push(newinterest);
+            usersRef.set({
+                email: email,
+                phone: phone,
+                gender: gender,
+                interests: interests,
+                skills: skills,
+                credit:credit,
+                rate:rate,
+                username: username
+            }).then(function () {
+                alert("newInterests saved!");
+                document.getElementById("interest_add_input").value = '';
+                if (interestsArray == 1) {
+                    var interestsRow = document.getElementsByName('interest_row');
+                    var interestsBlock = document.getElementsByName('interests');
+                    interestsRow[0].style.display = 'block';
+                    interestsBlock[0].textContent = interests[0];
+                }
+            }).catch(function (error) {
+                alert("newSkill : Got an error: " + error);
+            });
+        } else {
+            alert("please input the interest you want to add")
+        }
+        loadPage(user);
     }
 
 </script>
@@ -1331,7 +1385,7 @@
                                                         onclick="remove_skill()"></td>
                                             </tr>
 
-                                            <tr id = "skill_add_row">
+                                            <tr id="skill_add_row">
                                                 <td id="info_skill_add_input"><input type="text"
                                                         placeholder="Enter a skill you owned." id="skill_add_input">
                                                 </td>
@@ -1364,7 +1418,7 @@
                                                         onclick="remove_interest()"></td>
                                             </tr>
 
-                                            <tr id = 'interests_add_row'>
+                                            <tr id='interests_add_row'>
                                                 <td id="info_interest_add_input"><input type="text"
                                                         placeholder="Enter an interest." id="interest_add_input"></td>
                                                 <td id="info_interest_add_button"><input type="button" value="Add"
