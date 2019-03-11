@@ -33,7 +33,23 @@
             // Sign in with email and pass.
             // [START createwithemail]
             
-            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+                usersRef.set({
+                    email: email,
+                    phone: 000,
+                    gender: 'male',
+                    interests: '',
+                    skills: '',
+                    credit: 0,
+                    rate: 0,
+                    username: '',
+                    rate_amount: 0
+                }).then(function () {
+                    alert("Status saved");
+                }).catch(function (error) {
+                    alert("Got an error: " + error);
+                });
+            }).catch(function (error) {
                 // Handle Errors here.
                 alert("---");
                 var errorCode = error.code;

@@ -22,17 +22,15 @@
 </script>
 
 <script type="text/javascript">
+
+    var firestore = firebase.firestore();
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                var email = user.email;
-                var gender = user.gender;
-                var username = user.username;
-                var phone = user.phone;
-                var interests = user.interests;
-                var skills = user.skills;
-
-
+                var uid = user.uid;
+                var email, credit, gender, username, phone, interests, skills, rate;
+                const usersRef = firestore.doc("users/" + uid);
+                const courseRef = firestore.doc("course/1");
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -42,15 +40,37 @@
                 document.getElementById('top3').style.display = 'block';
                 document.getElementById('signout').style.display = 'block';
 
-                if (username) {
-                    document.getElementById('username').textContent = username;
-                }
-                else if (email) {
-                    document.getElementById('username').textContent = email;
-                }
+                usersRef.get().then(function (doc) {
+                    if (doc && doc.exists) { 
+                        const curData = doc.data();
+                        user.email = curData.email;
+                        user.credit = curData.credit;
+                        user.gender = curData.gender;
+                        user.username = curData.username;
+                        user.phone = curData.phone;
+                        user.interests = curData.interests;
+                        user.skills = curData.skills;
+                        user.rate = curData.rate;
+                        user.rate_amount = curData.rate_amount;
+
+                        loadPage(user);
+                    }
+                }).catch(function (error) {
+                    alert("Got an error: " + error);
+                });
+
             }
         });
     };
+
+    function loadPage(user) {
+        if (user.username) {
+            document.getElementById('title_username').textContent = user.username;
+        }
+        else if (user.email) {
+            document.getElementById('title_username').textContent = user.email;
+        }
+    }
     function signout() {
 
         firebase.auth().signOut().then(function () {
@@ -64,7 +84,7 @@
     }
 </script>
 <style>
-    #top {
+   #top {
         background-color: white;
         width: 100%;
         height: 31px;
@@ -138,7 +158,7 @@
         display: none;
     }
 
-    #username {
+    #title_username {
         margin-right: 10px;
     }
 
@@ -328,7 +348,7 @@
                 <li id="top1"> / </li>
                 <li id="login"><a href="login.html">Log In</a></li>
                 <li id="top2"> / </li>
-                <li id="user">Welcome, &nbsp;&nbsp;<a href="personal.html" id="username"></a></li>
+                <li id="user">Welcome, &nbsp;&nbsp;<a href="personal.html" id="title_username"></a></li>
                 <li id="top3"> / </li>
                 <li id="signout" onclick="signout()">Sign Out</li>
             </ul>

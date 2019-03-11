@@ -197,106 +197,133 @@
     }
 
     function loadPage(user) {
-        var phone = user.phone;
-        var email = user.email;
-        var credit = user.credit;
-        var gender = user.gender;
-        var username = user.username;
-        var interests = user.interests;
-        var skills = user.skills;
-        var rate = user.rate;
 
-        //Load personal information
-        if (username) {
-            document.getElementById('username').textContent = username;
-        }
-        else if (email) {
-            document.getElementById('username').textContent = email;
-        }
+        var uid = user.uid;
+        const usersRef = firestore.doc("users/" + uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) { 
+                const curData = doc.data();
+                user.email = curData.email;
+                user.credit = curData.credit;
+                user.gender = curData.gender;
+                user.username = curData.username;
+                user.phone = curData.phone;
+                user.interests = curData.interests;
+                user.skills = curData.skills;
+                user.rate = curData.rate;
+                user.rate_amount = curData.rate_amount;
 
-        if (gender == 'male') document.getElementById('info_gender_male').checked = true;
-        else if (gender == 'female') document.getElementById('info_gender_female').checked = true;
+                var phone = user.phone;
+                var email = user.email;
+                var credit = user.credit;
+                var gender = user.gender;
+                var username = user.username;
+                var interests = user.interests;
+                var skills = user.skills;
+                var rate = user.rate;
+                var rate_amount = user.rate_amount;
+
+                //Load personal information
+                if (username) {
+                    document.getElementById('username').textContent = username;
+                }
+                else if (email) {
+                    document.getElementById('username').textContent = email;
+                }
+
+                if (gender == 'male') document.getElementById('info_gender_male').checked = true;
+                else if (gender == 'female') document.getElementById('info_gender_female').checked = true;
 
 
-        if (skills) {
-            var skillBlock = document.getElementsByName('skills');
-            var skillRow = document.getElementsByName('skill_row');
-            skillBlock[0].textContent = skills[0];
-            skillBlock[1].textContent = skills[1];
-            skillBlock[2].textContent = skills[2];
-            skillRow[0].style.display = 'block';
-            skillRow[1].style.display = 'block';
-            skillRow[2].style.display = 'block';
-            if (!skills[0]) {
-                skillRow[0].style.display = 'none';
-                skillRow[1].style.display = 'none';
-                skillRow[2].style.display = 'none';
+                if (skills) {
+                    var skillBlock = document.getElementsByName('skills');
+                    var skillRow = document.getElementsByName('skill_row');
+                    skillBlock[0].textContent = skills[0];
+                    skillBlock[1].textContent = skills[1];
+                    skillBlock[2].textContent = skills[2];
+                    skillRow[0].style.display = 'block';
+                    skillRow[1].style.display = 'block';
+                    skillRow[2].style.display = 'block';
+                    if (!skills[0]) {
+                        skillRow[0].style.display = 'none';
+                        skillRow[1].style.display = 'none';
+                        skillRow[2].style.display = 'none';
+                    }
+                    if (!skills[1]) {
+                        skillRow[1].style.display = 'none';
+                        skillRow[2].style.display = 'none';
+                    }
+                    if (!skills[2]) {
+                        skillRow[2].style.display = 'none';
+                    }
+                    if (skills.length == 3) {
+                        var skill_add_row = document.getElementById("skill_add_row");
+                        skill_add_row.style.display = 'none';
+                    }
+                }
+                else {
+                    var skillRow = document.getElementsByName('skill_row');
+                    skillRow[0].style.display = 'none';
+                    skillRow[1].style.display = 'none';
+                    skillRow[2].style.display = 'none';
+                }
+
+                if (interests) {
+                    var interestBlock = document.getElementsByName('interest');
+                    var interestRow = document.getElementsByName('interest_row');
+                    interestBlock[0].textContent = interests[0];
+                    interestBlock[1].textContent = interests[1];
+                    interestBlock[2].textContent = interests[2];
+                    interestRow[0].style.display = 'block';
+                    interestRow[1].style.display = 'block';
+                    interestRow[2].style.display = 'block';
+                    if (!interests[0]) {
+                        interestRow[0].style.display = 'none';
+                        interestRow[1].style.display = 'none';
+                        interestRow[2].style.display = 'none';
+                    }
+                    if (!interests[1]) {
+                        interestRow[1].style.display = 'none';
+                        interestRow[2].style.display = 'none';
+                    }
+                    if (!interests[2]) {
+                        interestRow[2].style.display = 'none';
+                    }
+                    if (interests.length == 3) {
+                        var interests_add_row = document.getElementById("interests_add_row");
+                        interests_add_row.style.display = 'none';
+                    }
+
+                } else {
+                    var interestRow = document.getElementsByName('interest_row');
+                    interestRow[0].style.display = 'none';
+                    interestRow[1].style.display = 'none';
+                    interestRow[2].style.display = 'none';
+                }
+
+
+                alert(credit + "   rate   " + rate);
+
+                if (phone) document.getElementById('phone_input').value = phone;
+                else document.getElementById('phone_input').value = '';
+
+                if (credit) document.getElementById('info_credit').textContent = credit;
+                else document.getElementById('info_credit').textContent = '0';
+
+                if (rate) document.getElementById('info_rate').textContent = rate;
+                else document.getElementById('info_rate').textContent = '0';
+
+                document.getElementById('info_username').textContent = username;
+                document.getElementById('email_input').value = email;
+                document.getElementById('oldName').textContent = username;
             }
-            if (!skills[1]) {
-                skillRow[1].style.display = 'none';
-                skillRow[2].style.display = 'none';
-            }
-            if (!skills[2]) {
-                skillRow[2].style.display = 'none';
-            }
-            if (skills.length == 3) {
-                var skill_add_row = document.getElementById("skill_add_row");
-                skill_add_row.style.display = 'none';
-            }
-        }
-        else {
-            var skillRow = document.getElementsByName('skill_row');
-            skillRow[0].style.display = 'none';
-            skillRow[1].style.display = 'none';
-            skillRow[2].style.display = 'none';
-        }
+            // Load course information
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
 
-        if (interests) {
-            var interestBlock = document.getElementsByName('interest');
-            var interestRow = document.getElementsByName('interest_row');
-            interestBlock[0].textContent = interests[0];
-            interestBlock[1].textContent = interests[1];
-            interestBlock[2].textContent = interests[2];
-            interestRow[0].style.display = 'block';
-            interestRow[1].style.display = 'block';
-            interestRow[2].style.display = 'block';
-            if (!interests[0]) {
-                interestRow[0].style.display = 'none';
-                interestRow[1].style.display = 'none';
-                interestRow[2].style.display = 'none';
-            }
-            if (!interests[1]) {
-                interestRow[1].style.display = 'none';
-                interestRow[2].style.display = 'none';
-            }
-            if (!interests[2]) {
-                interestRow[2].style.display = 'none';
-            }
-            if (interests.length == 3) {
-                var interests_add_row = document.getElementById("interests_add_row");
-                interests_add_row.style.display = 'none';
-            }
 
-        } else {
-            var interestRow = document.getElementsByName('interest_row');
-            interestRow[0].style.display = 'none';
-            interestRow[1].style.display = 'none';
-            interestRow[2].style.display = 'none';
-        }
-
-        if (phone) document.getElementById('phone_input').value = phone;
-        else document.getElementById('phone_input').value = '';
-
-        if (credit) document.getElementById('info_credit').value = credit;
-        else document.getElementById('info_credit').textContent = '0';
-
-        if (credit) document.getElementById('info_rate').value = rate;
-        else document.getElementById('info_rate').textContent = '0';
-        document.getElementById('info_username').textContent = username;
-        document.getElementById('email_input').value = email;
-        document.getElementById('oldName').textContent = username;
-
-        // Load course information
+ 
 
     }
 
@@ -316,6 +343,8 @@
         var uid = user.uid;
         var gender;
         var rate_amount = user.rate_amount;
+        var interests = user.interests;
+        var skills = user.skills;
         var credit = document.getElementById("info_credit").textContent;
         var rate = document.getElementById("info_rate").textContent;
         var phone = document.getElementById("phone_input").value;
@@ -407,6 +436,8 @@
                 interests = curData.interests;
                 credit = curData.credit;
                 rate = curData.rate;
+                rate_amount = curData.rate_amount;
+                
                 username = curData.username;
                 loadPage(user);
 
@@ -419,6 +450,7 @@
                     skills: skills,
                     credit: credit,
                     rate: rate,
+                    rate_amount: rate_amount,
                     username: username
                 }).then(function () {
                     console.log("Delete skills: " + remove_skill_num);
@@ -452,6 +484,7 @@
                 rate = curData.rate;
                 interests = curData.interests;
                 username = curData.username;
+                rate_amount = curData.rate_amount;
                 loadPage(user);
 
                 skills = user.skills;
@@ -468,6 +501,7 @@
                         interests: interests,
                         credit: credit,
                         rate: rate,
+                        rate_amount: rate_amount,
                         username: username
                     }).then(function () {
                         console.log("newSkill saved!");
@@ -506,6 +540,7 @@
                 credit = curData.credit;
                 rate = curData.rate;
                 username = curData.username;
+                rate_amount = curData.rate_amount;
                 loadPage(user);
 
                 interests = user.interests;
@@ -517,6 +552,7 @@
                     skills: skills,
                     credit: credit,
                     rate: rate,
+                    rate_amount: rate_amount,
                     username: username
                 }).then(function () {
                     console.log("Delete interests: " + remove_interest_num);
@@ -549,6 +585,7 @@
                 credit = curData.credit;
                 rate = curData.rate;
                 username = curData.username;
+                rate_amount = curData.rate_amount;
                 loadPage(user);
                 interests = user.interests;
                 if (!interests) {
@@ -564,6 +601,7 @@
                         skills: skills,
                         credit: credit,
                         rate: rate,
+                        rate_amount: rate_amount,
                         username: username
                     }).then(function () {
                         console.log("newInterests saved!");
@@ -1582,12 +1620,12 @@
                         <table id="info_table">
                             <tr>
                                 <td id="info_title">Credit</td>
-                                <td id="info_credit">num</td>
+                                <td id="info_credit"></td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td id="info_title">Rate</td>
-                                <td id="info_rate">num</td>
+                                <td id="info_rate"></td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>

@@ -53,6 +53,8 @@
                         user.skills = curData.skills;
                         user.rate = curData.rate;
                         user.rate_amount = curData.rate_amount;
+
+                        loadPage(user);
                     }
                 }).catch(function (error) {
                     alert("Got an error: " + error);
@@ -61,6 +63,14 @@
             }
         });
     };
+    function loadPage(user) {
+        if (user.username) {
+            document.getElementById('username').textContent = user.username;
+        }
+        else if (user.email) {
+            document.getElementById('username').textContent = user.email;
+        }
+    }
 
     function signout() {
 
