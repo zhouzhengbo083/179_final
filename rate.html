@@ -3,6 +3,7 @@
 
 <head>
     <title>Hobby-ever</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
 
@@ -22,17 +23,15 @@
 </script>
 
 <script type="text/javascript">
+
+    var firestore = firebase.firestore();
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                var email = user.email;
-                var gender = user.gender;
-                var username = user.username;
-                var phone = user.phone;
-                var interests = user.interests;
-                var skills = user.skills;
-
-
+                var uid = user.uid;
+                var email, credit, gender, username, phone, interests, skills, rate;
+                const usersRef = firestore.doc("users/" + uid);
+                const courseRef = firestore.doc("course/1");
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -42,15 +41,27 @@
                 document.getElementById('top3').style.display = 'block';
                 document.getElementById('signout').style.display = 'block';
 
-                if (username) {
-                    document.getElementById('username').textContent = username;
-                }
-                else if (email) {
-                    document.getElementById('username').textContent = email;
-                }
+                usersRef.get().then(function (doc) {
+                    if (doc && doc.exists) { 
+                        const curData = doc.data();
+                        user.email = curData.email;
+                        user.credit = curData.credit;
+                        user.gender = curData.gender;
+                        user.username = curData.username;
+                        user.phone = curData.phone;
+                        user.interests = curData.interests;
+                        user.skills = curData.skills;
+                        user.rate = curData.rate;
+                        user.rate_amount = curData.rate_amount;
+                    }
+                }).catch(function (error) {
+                    alert("Got an error: " + error);
+                });
+
             }
         });
     };
+
     function signout() {
 
         firebase.auth().signOut().then(function () {
@@ -60,8 +71,67 @@
             // An error happened.
             alert(error);
         });
-
     }
+
+    function updateRate() {
+
+        var user = firebase.auth().currentUser;
+        var uid = user.uid;
+        var gender = user.gender;
+        var interests = user.interests;
+        var skills = user.skills;
+        var credit = user.credit;
+        var rate = user.rate;
+        var email = user.email;
+        var phone = user.phone;
+        var username = user.username;
+        var rate_amount = user.rate_amount;
+        const usersRef = firestore.doc("users/" + uid);
+
+        console.log(user)
+
+        var rate_score = new Array();
+        var quest1 = document.getElementsByName('question1');
+        var quest2 = document.getElementsByName('question2');
+        var quest3 = document.getElementsByName('question3');
+        var quest4 = document.getElementsByName('question4');
+        var quest5 = document.getElementsByName('question5');
+        var count = 0;
+        rate_score[0] = 0;
+        rate_score[1] = 0;
+        rate_score[2] = 0;
+        rate_score[3] = 0; 
+        rate_score[4] = 0;
+
+        for(var i=0; i<5; i++){
+            if(quest1[i].checked) {rate_score[0] = quest1[i].value;count = count+1;}
+            if(quest2[i].checked) {rate_score[1] = quest2[i].value;count = count+1;}
+            if(quest3[i].checked) {rate_score[2] = quest3[i].value;count = count+1;}
+            if(quest4[i].checked) {rate_score[3] = quest4[i].value;count = count+1;}
+            if(quest5[i].checked) {rate_score[4] = quest5[i].value;count = count+1;} 
+        }
+        var score = (parseInt(rate_score[0]) + parseInt(rate_score[1]) + parseInt(rate_score[2]) + parseInt(rate_score[3]) + parseInt(rate_score[4])) / parseInt(count);
+        var newRate = (rate*rate_amount + score) / (rate_amount + 1);
+        newRate = newRate.toFixed(2);
+
+        usersRef.set({
+            email: email,
+            phone: phone,
+            gender: gender,
+            interests: interests,
+            skills: skills, 
+            credit: credit,
+            rate: newRate,
+            username: username,
+            rate_amount: rate_amount + 1
+        }).then(function () {
+            alert("Status saved");
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
+    }
+
+
 </script>
 <style>
     #top {
@@ -284,7 +354,7 @@
         padding-top: 75px;
     }
 
-    #butto button {
+    #butto input {
         width: 120px;
         height: 30px;
         font-size: 16px;
@@ -331,11 +401,11 @@
         <form id="middle_content" class="card">
             <table>
                 <tr>
-                    <td id="info" colspan="2">Username</th>
+                    <td id="info" name="rate_email" colspan="2">Email</td>
                 </tr>
                 <tr>
-                    <td id="info">Subject: Basketball</td>
-                    <td id="info">Date: 2019-01-24</td>
+                    <td id="info" name="rate_subject">Subject: Basketball</td>
+                    <td id="info" name="rate_time">Date: 2019-01-24</td>
                 </tr>
                 <tr style="margin-top:20px;">
                     <td colspan="2">&nbsp;</td>
@@ -401,8 +471,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td id="butto"><button>Submit</button></td>
-                    <td id="butto"><button>Reset</button></td>
+                    <td id="butto"><input type="button" value="Submit" onclick="updateRate()"></td>
+                    <td id="butto"><input type="button" value="Reset"></td>
                 </tr>
             </table>
         </form>

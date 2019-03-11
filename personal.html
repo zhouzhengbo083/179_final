@@ -9,7 +9,7 @@
 
 </head>
 <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
-<script>
+<script type="text/javascript">
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
@@ -28,7 +28,6 @@
                 var uid = user.uid;
                 var email, credit, gender, username, phone, interests, skills, rate;
                 const usersRef = firestore.doc("users/" + uid);
-                const courseRef = firestore.doc("course/1");
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -49,6 +48,7 @@
                         user.interests = curData.interests;
                         user.skills = curData.skills;
                         user.rate = curData.rate;
+                        user.rate_amount = curData.rate_amount;
 
                         loadPage(user);
                     }
@@ -56,11 +56,144 @@
                     alert("Got an error: " + error);
                 });
 
-                loadPage(user);
+                var course_user_id = uid;
+                var course_user = 'user1';
+                firebase.firestore().collection("course").where("user1_id", "==", uid).get().then(function(querySnapshot) {
+
+                    var courseIdList = new Array();
+                    var course_num = 0;
+                    querySnapshot.forEach(function(doc) {
+
+                        console.log(doc.id, " --> ", doc.data());
+                        courseIdList[course_num] = doc.id;
+                        course_num = parseInt(course_num) + 1;
+                        course_user = "user1";
+                        loadCourse(courseIdList, course_num, course_user_id, course_user);
+                    });
+                    // loadCourse(courseIdList, course_num, course_user_id, course_user);
+                }).catch(function(error) {
+                    console.log("ERROR: " + error);
+                });
+
+                firebase.firestore().collection("course").where("user2_id", "==", uid).get().then(function(querySnapshot) {  
+                    var courseIdList = new Array(); 
+                    var course_num = 0;
+                    querySnapshot.forEach(function(doc) {
+                        console.log(doc.id, " --> ", doc.data());
+                        courseIdList[course_num] = doc.id;
+                        course_num = parseInt(course_num) + 1;
+                        course_user = "user2";
+                        loadCourse(courseIdList, course_num, course_user_id, course_user);
+                    });
+                    // loadCourse(courseIdList, course_num, course_user_id, course_user);
+                }).catch(function(error) {
+                    console.log("ERROR: " + error);
+                });
+
+                loadPage(user); 
 
             }
         });
-    };
+    }; 
+
+    function loadCourse(courseIdList, course_num, course_user_id, course_user){
+        var course_title, course_start_time, course_end_time, course_tutor_name, course_tutor_id;
+        console.log("course_user: " + course_user);
+        var courseRef = firestore.doc("course/" + courseIdList[course_num-1]);
+        courseRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                var curData = doc.data();
+                if(course_user == "user1"){
+
+                    course_title = curData.course_name_user1;
+                    course_tutor_id = curData.user2_id;
+                }
+                else if(course_user == "user2"){
+                    course_title = curData.course_name_user2;
+                    course_tutor_id = curData.user1_id;
+                }
+                course_start_time = curData.start_time;
+                course_end_time = curData.end_time;
+                const usersRef = firestore.doc("users/" + course_tutor_id);
+
+                usersRef.get().then(function (doc) {
+                    if (doc && doc.exists) {
+                        const curData = doc.data();
+                        course_tutor_name = curData.username;
+                        loadCoursePage(course_title, course_start_time, course_end_time, course_tutor_name);
+                    }
+                }).catch(function (error) {
+                    alert("Got an error: " + error);
+                });
+
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
+        // }
+    }
+
+    function loadCoursePage(course_title, start_time, end_time, course_tutor_name){
+        try{
+            var course_table = document.getElementById('course_table');
+            var course_table_tr = document.createElement('tr');
+            course_table.appendChild(course_table_tr);
+            
+            //course_table_title
+            var course_table_title = document.createElement("td");
+            course_table_tr.appendChild(course_table_title);
+            course_table_title.id = "course_table_title";
+            course_table_title.innerHTML = course_title;
+
+            //course_table_tutorName
+            var course_table_tutorName = document.createElement("td");
+            course_table_tr.appendChild(course_table_tutorName);
+            course_table_tutorName.id = "course_table_tutorName";
+            course_table_tutorName.innerHTML = course_tutor_name;
+
+            //course_table_date
+            var course_table_date = document.createElement("td");
+            course_table_date.id = "course_table_date";
+            course_table_tr.appendChild(course_table_date);
+            var course_start_time = document.createElement("p");
+            var course_end_time = document.createElement("p");
+            course_start_time.id = "course_start_time";
+            course_end_time.id = "course_end_time";
+            course_start_time.innerHTML = start_time;
+            course_end_time.innerHTML = end_time;
+            course_table_date.appendChild(course_start_time);
+            course_table_date.appendChild(course_end_time);
+
+            //course_table_button
+            var course_table_button = document.createElement("td");
+            course_table_button.id = "course_tabel_button";
+            course_table_button.style.marginTop = "7px";
+            course_table_tr.appendChild(course_table_button);
+            var course_course = document.createElement("input");
+            course_course.id = "course_course";
+            course_course.type = "button";
+            course_course.value = "Course";
+            course_table_button.appendChild(course_course);
+            var course_rate = document.createElement("input");
+            course_rate.id = "course_rate";
+            course_rate.type = "button";
+            course_rate.value = "Rate";
+            course_table_button.appendChild(course_rate);
+            var course_cancel = document.createElement("input");
+            course_cancel.id = "course_cancel";
+            course_cancel.type = "button";
+            course_cancel.value = "Cancel";
+            course_table_button.appendChild(course_cancel);
+
+
+            document.getElementById("course_table_tutorName").onclick=function(){goTutorPage()};
+            document.getElementById("course_course").onclick=function(){goCourse()};
+            document.getElementById("course_rate").onclick=function(){goRate()};
+            
+        }catch(error){
+            console.log(error);
+        }
+    }
 
     function loadPage(user) {
         var phone = user.phone;
@@ -117,31 +250,36 @@
     function setUserInfo(user, username){
         var uid = user.uid;
         var gender;
+        var rate_amount = user.rate_amount;
         var credit = document.getElementById("info_credit").textContent;
         var rate = document.getElementById("info_rate").textContent;
-        var email = document.getElementById("email_input").value;
         var phone = document.getElementById("phone_input").value;
         var interests = document.getElementById("info_interest_title").textContent;
         var skills = document.getElementById("info_skill_title").textContent;
         const usersRef = firestore.doc("users/" + uid);
+        var credit = user.credit;
+        credit = parseInt(credit) + 2;
+        alert("You got 2 credits award!");
 
         if (document.getElementById('info_gender_male').checked) gender = 'male';
         else if (document.getElementById('info_gender_female').checked) gender = 'female';
 
         usersRef.set({
-            email: email,
             phone: phone,
             gender: gender,
             interests: interests,
             skills: skills,
             credit: credit,
             rate: rate,
-            username: username
+            username: username,
+            rate_amount: rate_amount
         }).then(function () {
             alert("Status saved");
         }).catch(function (error) {
             alert("Got an error: " + error);
         });
+
+        loadPage(user);
     }
 
     function updateInfo() {
@@ -181,17 +319,18 @@
         var skills = user.skills;
         var credit = user.credit;
         var rate = user.rate;
+        var rate_amount = user.rate_amount;
         var email = document.getElementById("email_input").value;
         var phone = document.getElementById("phone_input").value;
         var username = document.getElementById('newName_input').value;
         const docRef = firestore.doc("users/" + uid);
-        user.username = username;
 
         setUserInfo(user, username);
 
         document.getElementById("mask").style.display = 'none';
         loadPage(user);
     }
+
 </script>
 <style>
     #top {
@@ -815,7 +954,7 @@
         display: block;
         height: 40px;
         width: 625px;
-        margin-top: 10px;
+        margin-top: 20px;
     }
 
     #course_table tr td {
@@ -823,35 +962,33 @@
         float: left;
     }
 
-    #course_table_title {
+    #course_table_title, #course_table_title_title {
         display: block;
-        width: 110px;
+        width: 125px;
         height: 40x;
         line-height: 40px;
+        text-align: center;
     }
 
-    #course_table_tutorName {
+    #course_table_tutorName, #course_table_tutorName_title {
         display: block;
         width: 90px;
         height: 40px;
-        margin-left: 15px;
         line-height: 40px;
+        text-align: center;
     }
 
     #course_table_tutorName {
-        margin-right: 25px;
+        margin-right: 15px;
     }
 
+    #course_table_date_title,
     #course_table_date {
-        margin-right: 20px;
-    }
-
-    #course_table_date,
-    #course_table_date div {
         display: block;
-        width: 160px;
+        width: 180px;
         height: 40px;
         line-height: 40px;
+        text-align: center;
     }
 
     #course_start_time {
@@ -872,30 +1009,42 @@
         float: left;
     }
 
+    #course_table_button_title {
+        display: block;
+        width: 180px;
+        height: 40px;
+        float: left;
+        line-height: 40px;
+        text-align: center;
+
+    }
     #course_table_button {
         display: block;
         width: 180px;
         height: 40px;
         float: left;
         line-height: 40px;
-        margin-top: 7px;
         margin-left: 12px;
+        text-align: center;
+
     }
 
     #course_rate,
+    #course_course,
     #course_cancel {
-        width: 75px;
+        width: 60px;
         height: 24px;
         display: block;
         font-size: 13px;
         margin-top: 3px;
         border-radius: 5px;
+        text-align: center;
         border: 1px solid #b2b2b2;
         float: left;
     }
 
-    #course_rate {
-        margin-right: 10px;
+    #course_rate, #course_course {
+        margin-right: 1px;
     }
 
     #course_page {
@@ -1345,62 +1494,16 @@
                     <li id="tab_course" name="tab">
                         <div id="course_list">
                             <form>
-                                <table id="course_table">
-                                    <tr>
-                                        <td id="course_table_title">Title</td>
-                                        <td id="course_table_tutorName">Tutor Name</td>
-                                        <td id="course_table_date">
-                                            <div>
-                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
-                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
-                                            </div>
-                                        </td>
-                                        <td id="course_table_button">
-                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
-                                            <input id="course_cancel" type="button" value="Cancel">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="course_table_title">Title</td>
-                                        <td id="course_table_tutorName">Tutor Name</td>
-                                        <td id="course_table_date">
-                                            <div>
-                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
-                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
-                                            </div>
-                                        </td>
-                                        <td id="course_table_button">
-                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
-                                            <input id="course_cancel" type="button" value="Cancel">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="course_table_title">Title</td>
-                                        <td id="course_table_tutorName">Tutor Name</td>
-                                        <td id="course_table_date">
-                                            <div>
-                                                <p id="course_start_time">2019-02-02 09:21 A.M.</p>
-                                                <p id="course_end_time">2019-02-02 09:30 A.M.</p>
-                                            </div>
-                                        </td>
-                                        <td id="course_table_button">
-                                            <input id="course_rate" type="button" value="Rate" onclick="rate()">
-                                            <input id="course_cancel" type="button" value="Cancel">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="course_page" colspan="4">
-                                            <div id="page_box">
-                                                <div id="page">
-                                                    <input onclick="prev(2)" value="↢">
-                                                    &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div
-                                                        style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;"
-                                                        id="all">all</div>&nbsp;&nbsp;
-                                                    <input onclick="next(2)" value="↣">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <table>
+                                    <tbody id="course_table">
+                                        <tr>
+                                            <td id="course_table_title_title" style="font-size:18px;">Subject</td>
+                                            <td id="course_table_tutorName_title" style="font-size:18px;">Paired-User</td>
+                                            <td id="course_table_date_title" style="font-size:18px;">Course Time</td>
+                                            <td id="course_table_button_title" style="font-size:18px;">Process</td>
+                                        </tr>
+                                    </tbody>
+
                                 </table>
                             </form>
                         </div>
@@ -1515,9 +1618,6 @@
         $("#mask").fadeOut(600);
         $("#mask_video").fadeOut(600);
         $("#mask_calendar").fadeOut(600);
-    }
-    function rate() {
-        window.location.href = 'rate.html';
     }
     function playVideo() {
         window.location.href = 'video.html';
@@ -1635,6 +1735,18 @@
         }
         // window.location.href="calendar.action?cur="+cur;
     }
+
+    function goTutorPage(){
+        window.location='personal.html';
+    }
+    function goCourse(){
+        window.location='course.html';
+    }
+    function goRate(){
+        window.location='rate.html';
+    }
+
+
 </script>
 
 </html>
