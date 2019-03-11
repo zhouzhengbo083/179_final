@@ -25,6 +25,8 @@
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
+                console.log(user);
+
                 var uid = user.uid;
                 var email, credit, gender, username, phone, interests, skills, rate;
                 const usersRef = firestore.doc("users/" + uid);
@@ -49,11 +51,10 @@
                         user.skills = curData.skills;
                         user.rate = curData.rate;
                         user.rate_amount = curData.rate_amount;
-
                         loadPage(user);
                     }
                 }).catch(function (error) {
-                    alert("Got an error: " + error);
+                    console.log("Got an error: " + error);
                 });
 
                 var course_user_id = uid;
@@ -123,7 +124,7 @@
                         loadCoursePage(course_title, course_start_time, course_end_time, course_tutor_name);
                     }
                 }).catch(function (error) {
-                    alert("Got an error: " + error);
+                    console.log("Got an error: " + error);
                 });
 
             }
@@ -216,18 +217,82 @@
         if (gender == 'male') document.getElementById('info_gender_male').checked = true;
         else if (gender == 'female') document.getElementById('info_gender_female').checked = true;
 
+
+        if (skills) {
+            var skillBlock = document.getElementsByName('skills');
+            var skillRow = document.getElementsByName('skill_row');
+            skillBlock[0].textContent = skills[0];
+            skillBlock[1].textContent = skills[1];
+            skillBlock[2].textContent = skills[2];
+            skillRow[0].style.display = 'block';
+            skillRow[1].style.display = 'block';
+            skillRow[2].style.display = 'block';
+            if (!skills[0]) {
+                skillRow[0].style.display = 'none';
+                skillRow[1].style.display = 'none';
+                skillRow[2].style.display = 'none';
+            }
+            if (!skills[1]) {
+                skillRow[1].style.display = 'none';
+                skillRow[2].style.display = 'none';
+            }
+            if (!skills[2]) {
+                skillRow[2].style.display = 'none';
+            }
+            if (skills.length == 3) {
+                var skill_add_row = document.getElementById("skill_add_row");
+                skill_add_row.style.display = 'none';
+            }
+        }
+        else {
+            var skillRow = document.getElementsByName('skill_row');
+            skillRow[0].style.display = 'none';
+            skillRow[1].style.display = 'none';
+            skillRow[2].style.display = 'none';
+        }
+
+        if (interests) {
+            var interestBlock = document.getElementsByName('interest');
+            var interestRow = document.getElementsByName('interest_row');
+            interestBlock[0].textContent = interests[0];
+            interestBlock[1].textContent = interests[1];
+            interestBlock[2].textContent = interests[2];
+            interestRow[0].style.display = 'block';
+            interestRow[1].style.display = 'block';
+            interestRow[2].style.display = 'block';
+            if (!interests[0]) {
+                interestRow[0].style.display = 'none';
+                interestRow[1].style.display = 'none';
+                interestRow[2].style.display = 'none';
+            }
+            if (!interests[1]) {
+                interestRow[1].style.display = 'none';
+                interestRow[2].style.display = 'none';
+            }
+            if (!interests[2]) {
+                interestRow[2].style.display = 'none';
+            }
+            if (interests.length == 3) {
+                var interests_add_row = document.getElementById("interests_add_row");
+                interests_add_row.style.display = 'none';
+            }
+
+        } else {
+            var interestRow = document.getElementsByName('interest_row');
+            interestRow[0].style.display = 'none';
+            interestRow[1].style.display = 'none';
+            interestRow[2].style.display = 'none';
+        }
+
         if (phone) document.getElementById('phone_input').value = phone;
         else document.getElementById('phone_input').value = '';
 
-        if (credit) document.getElementById('info_credit').textContent = credit;
+        if (credit) document.getElementById('info_credit').value = credit;
         else document.getElementById('info_credit').textContent = '0';
 
-        if (credit) document.getElementById('info_rate').textContent = rate;
+        if (credit) document.getElementById('info_rate').value = rate;
         else document.getElementById('info_rate').textContent = '0';
-
         document.getElementById('info_username').textContent = username;
-        document.getElementById('info_skill_title').textContent = skills;
-        document.getElementById('info_interest_title').textContent = interests;
         document.getElementById('email_input').value = email;
         document.getElementById('oldName').textContent = username;
 
@@ -242,20 +307,18 @@
             window.location.href = "login.html";
         }, function (error) {
             // An error happened.
-            alert(error);
+            console.log(error);
         });
 
     }
 
-    function setUserInfo(user, username){
+    function setUserInfo(user, username) {
         var uid = user.uid;
         var gender;
         var rate_amount = user.rate_amount;
         var credit = document.getElementById("info_credit").textContent;
         var rate = document.getElementById("info_rate").textContent;
         var phone = document.getElementById("phone_input").value;
-        var interests = document.getElementById("info_interest_title").textContent;
-        var skills = document.getElementById("info_skill_title").textContent;
         const usersRef = firestore.doc("users/" + uid);
         var credit = user.credit;
         credit = parseInt(credit) + 2;
@@ -274,9 +337,9 @@
             username: username,
             rate_amount: rate_amount
         }).then(function () {
-            alert("Status saved");
+            console.log("Status saved");
         }).catch(function (error) {
-            alert("Got an error: " + error);
+            console.log("Got an error: " + error);
         });
 
         loadPage(user);
@@ -304,7 +367,7 @@
         if (credit) document.getElementById('info_credit').value = credit;
         else document.getElementById('info_credit').textContent = '0';
 
-        if (credit) document.getElementById('info_rate').value = rate;
+        if (rate) document.getElementById('info_rate').value = rate;
         else document.getElementById('info_rate').textContent = '0';
 
         setUserInfo(user, username);
@@ -329,6 +392,201 @@
 
         document.getElementById("mask").style.display = 'none';
         loadPage(user);
+    }
+
+
+    function remove_skill(remove_skill_num) {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.skills = curData.skills;
+                gender = curData.gender;
+                phone = curData.phone;
+                interests = curData.interests;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+
+                skills = user.skills;
+                skills.splice(remove_skill_num, 1);
+                usersRef.set({
+                    phone: phone,
+                    gender: gender,
+                    interests: interests,
+                    skills: skills,
+                    credit: credit,
+                    rate: rate,
+                    username: username
+                }).then(function () {
+                    console.log("Delete skills: " + remove_skill_num);
+                    // location.reload();
+                    var skill_add_row = document.getElementById("skill_add_row");
+                    skill_add_row.style.display = 'block';
+                    loadPage(user);
+                }).catch(function (error) {
+                    console.log("newSkill : Got an error: " + error);
+                });
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
+
+
+
+    }
+
+    function add_skill() {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        var phone, gender,credit, rate, username;
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.skills = curData.skills;
+                gender = curData.gender;
+                phone = curData.phone;
+                credit = curData.credit;
+                rate = curData.rate;
+                interests = curData.interests;
+                username = curData.username;
+                loadPage(user);
+
+                skills = user.skills;
+                if (!skills) {
+                    skills = new Array();
+                }
+                var newSkill = document.getElementById("skill_add_input").value;
+                if (newSkill) {
+                    skillArray = skills.push(newSkill);
+                    usersRef.set({
+                        skills: skills,
+                        phone: phone,
+                        gender: gender,
+                        interests: interests,
+                        credit: credit,
+                        rate: rate,
+                        username: username
+                    }).then(function () {
+                        console.log("newSkill saved!");
+                        document.getElementById("skill_add_input").value = '';
+                        if (skillArray == 1) {
+                            var skillRow = document.getElementsByName('skill_row');
+                            var skillBlock = document.getElementsByName('skills');
+                            skillRow[0].style.display = 'block';
+                            skillBlock[0].textContent = skills[0];
+                        }
+                    }).catch(function (error) {
+                        console.log("newSkill : Got an error: " + error);
+                    });
+                } else {
+                    console.log("please input the skill you want to add")
+                }
+                loadPage(user);
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
+
+
+    }
+
+    function remove_interest(remove_interest_num) {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.interests = curData.interests;
+                gender = curData.gender;
+                phone = curData.phone;
+                skills = curData.skills;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+
+                interests = user.interests;
+                interests.splice(remove_interest_num, 1);
+                usersRef.set({
+                    phone: phone,
+                    gender: gender,
+                    interests: interests,
+                    skills: skills,
+                    credit: credit,
+                    rate: rate,
+                    username: username
+                }).then(function () {
+                    console.log("Delete interests: " + remove_interest_num);
+                    // location.reload();
+                    var interests_add_row = document.getElementById("interests_add_row");
+                    interests_add_row.style.display = 'block';
+                    loadPage(user);
+                }).catch(function (error) {
+                    console.log("newSkill : Got an error: " + error);
+                });
+
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
+
+
+    }
+
+    function add_interest() {
+        var user = firebase.auth().currentUser;
+        const usersRef = firestore.doc("users/" + user.uid);
+        usersRef.get().then(function (doc) {
+            if (doc && doc.exists) {
+                const curData = doc.data();
+                user.interests = curData.interests;
+                gender = curData.gender;
+                phone = curData.phone;
+                skills = curData.skills;
+                credit = curData.credit;
+                rate = curData.rate;
+                username = curData.username;
+                loadPage(user);
+                interests = user.interests;
+                if (!interests) {
+                    interests = new Array();
+                }
+                var newinterest = document.getElementById("interest_add_input").value;
+                if (newinterest) {
+                    interestsArray = interests.push(newinterest);
+                    usersRef.set({
+                        phone: phone,
+                        gender: gender,
+                        interests: interests,
+                        skills: skills,
+                        credit: credit,
+                        rate: rate,
+                        username: username
+                    }).then(function () {
+                        console.log("newInterests saved!");
+                        document.getElementById("interest_add_input").value = '';
+                        if (interestsArray == 1) {
+                            var interestsRow = document.getElementsByName('interest_row');
+                            var interestsBlock = document.getElementsByName('interests');
+                            interestsRow[0].style.display = 'block';
+                            interestsBlock[0].textContent = interests[0];
+                        }
+                    }).catch(function (error) {
+                        console.log("newSkill : Got an error: " + error);
+                    });
+                } else {
+                    console.log("please input the interest you want to add")
+                }
+                loadPage(user);
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
+
+
     }
 
 </script>
@@ -1337,26 +1595,28 @@
                                 <td id="info_skill">
                                     <div id="info_skill_table">
                                         <table>
-                                            <tr>
-                                                <td id="info_skill_title">Basketball</td>
+                                            <tr name='skill_row'>
+                                                <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(0)"></td>
                                             </tr>
-                                            <tr>
-                                                <td id="info_skill_title">Basketball</td>
+                                            <tr name='skill_row'>
+                                                <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(1)"></td>
                                             </tr>
-                                            <tr>
-                                                <td id="info_skill_title">Basketball</td>
+                                            <tr name='skill_row'>
+                                                <td id="info_skill_title" name='skills'> </td>
                                                 <td id="info_skill_button"><input type="button" value="Remove"
-                                                        onclick="remove_skill()"></td>
+                                                        onclick="remove_skill(2)"></td>
                                             </tr>
 
-                                            <tr>
+                                            <tr id="skill_add_row">
                                                 <td id="info_skill_add_input"><input type="text"
-                                                        placeholder="Enter a skill you owned."></td>
-                                                <td id="info_skill_add_button"><input type="button" value="Add"></td>
+                                                        placeholder="Enter a skill you owned." id="skill_add_input">
+                                                </td>
+                                                <td id="info_skill_add_button"><input type="button" value="Add"
+                                                        onclick="add_skill()"></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1368,25 +1628,27 @@
                                 <td id="info_interests">
                                     <div id="info_interest_table">
                                         <table>
-                                            <tr>
-                                                <td id="info_interest_title">Basketball</td>
+                                            <tr name='interest_row'>
+                                                <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(0)"></td>
                                             </tr>
-                                            <tr>
-                                                <td id="info_interest_title">Basketball</td>
+                                            <tr name='interest_row'>
+                                                <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(1)"></td>
                                             </tr>
-                                            <tr>
-                                                <td id="info_interest_title">Basketball</td>
+                                            <tr name='interest_row'>
+                                                <td id="info_interest_title" name="interest"> </td>
                                                 <td id="info_interest_button"><input type="button" value="Remove"
-                                                        onclick="remove_interest()"></td>
+                                                        onclick="remove_interest(2)"></td>
                                             </tr>
-                                            <tr>
+
+                                            <tr id='interests_add_row'>
                                                 <td id="info_interest_add_input"><input type="text"
-                                                        placeholder="Enter an interest."></td>
-                                                <td id="info_interest_add_button"><input type="button" value="Add"></td>
+                                                        placeholder="Enter an interest." id="interest_add_input"></td>
+                                                <td id="info_interest_add_button"><input type="button" value="Add"
+                                                        onclick="add_interest()"></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1723,6 +1985,7 @@
         }
         // window.location.href="calendar.action?cur="+cur;
     }
+    
     function next(num) {
         var cur = parseInt($("#cur").html());
         var all = parseInt($("#all").html());
