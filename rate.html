@@ -24,6 +24,22 @@
 
 <script type="text/javascript">
 
+    function getQuery(query) {
+        var request = window.location.search.substr(1);
+        var queries = request.split("&");
+        for(var i=0; i<queries.length; i++) {
+            query_pair = queries[i].split("=");
+            if(query_pair[0] == query)
+                return query_pair[1];
+        }
+        return (false);
+    }
+
+    var tutor_id = getQuery("tutor_id");
+    var course_name = getQuery("course_name");
+    var course_date = getQuery("course_date").substr(0,10);
+    console.log("tutor_id: " + tutor_id + "\n course_name: " + course_name + "\n course_date: " + course_date);
+
     var firestore = firebase.firestore();
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
@@ -70,6 +86,23 @@
         else if (user.email) {
             document.getElementById('username').textContent = user.email;
         }
+
+        const tutorRef = firestore.doc("users/" + tutor_id);
+        tutorRef.get().then(function (doc) {
+            if (doc && doc.exists) { 
+                const curData = doc.data();
+                var tutor_email = curData.email;
+                var tutor_username = curData.username;
+                
+                if(tutor_username) document.getElementById("rate_email").textContent = tutor_username;
+                else document.getElementById("rate_email").textContent = tutor_email;
+
+                document.getElementById("rate_subject").textContent = course_name;
+                document.getElementById("rate_time").textContent = course_date;
+            }
+        }).catch(function (error) {
+            console.log("Got an error: " + error);
+        });
     }
 
     function signout() {
@@ -84,69 +117,83 @@
     }
 
     function updateRate() {
+        var interests, skills, gender, credit, rate, email, phone, username, rate_amount;
+        const tutorRef = firestore.doc("users/" + tutor_id);
 
-        var user = firebase.auth().currentUser;
-        var uid = user.uid;
-        var gender = user.gender;
-        var interests = user.interests;
-        var skills = user.skills;
-        var credit = user.credit;
-        var rate = user.rate;
-        var email = user.email;
-        var phone = user.phone;
-        var username = user.username;
-        var rate_amount = user.rate_amount;
-        const usersRef = firestore.doc("users/" + uid);
+        tutorRef.get().then(function (doc) {
+            if (doc && doc.exists) { 
+                const curData = doc.data();
+                email = curData.email;
+                credit = curData.credit;
+                gender = curData.gender;
+                username = curData.username;
+                phone = curData.phone;
+                interests = curData.interests;
+                skills = curData.skills;
+                rate = curData.rate;
+                rate_amount = curData.rate_amount;
 
-        console.log(user)
+                var rate_score = new Array();
+                var quest1 = document.getElementsByName('question1');
+                var quest2 = document.getElementsByName('question2');
+                var quest3 = document.getElementsByName('question3');
+                var quest4 = document.getElementsByName('question4');
+                var quest5 = document.getElementsByName('question5');
+                var count = 0;
+                var score = 0;
+                var newRate = rate;
+                rate_score[0] = 0;
+                rate_score[1] = 0;
+                rate_score[2] = 0;
+                rate_score[3] = 0; 
+                rate_score[4] = 0;
 
-        var rate_score = new Array();
-        var quest1 = document.getElementsByName('question1');
-        var quest2 = document.getElementsByName('question2');
-        var quest3 = document.getElementsByName('question3');
-        var quest4 = document.getElementsByName('question4');
-        var quest5 = document.getElementsByName('question5');
-        var count = 0;
-        rate_score[0] = 0;
-        rate_score[1] = 0;
-        rate_score[2] = 0;
-        rate_score[3] = 0; 
-        rate_score[4] = 0;
+                for(var i=0; i<5; i++){
+                    if(quest1[i].checked) {rate_score[0] = quest1[i].value;count = count+1;}
+                    if(quest2[i].checked) {rate_score[1] = quest2[i].value;count = count+1;}
+                    if(quest3[i].checked) {rate_score[2] = quest3[i].value;count = count+1;}
+                    if(quest4[i].checked) {rate_score[3] = quest4[i].value;count = count+1;}
+                    if(quest5[i].checked) {rate_score[4] = quest5[i].value;count = count+1;} 
+                }
+                if(count!=0) {
+                    score = (parseInt(rate_score[0]) + parseInt(rate_score[1]) + parseInt(rate_score[2]) + parseInt(rate_score[3]) + parseInt(rate_score[4])) / parseInt(count);
+                    newRate = (parseFloat(rate*rate_amount) + score) / (parseInt(rate_amount) + 1);
+                    newRate = newRate.toFixed(2);
+                    rate_amount = parseInt(rate_amount) + 1
+                
 
-        for(var i=0; i<5; i++){
-            if(quest1[i].checked) {rate_score[0] = quest1[i].value;count = count+1;}
-            if(quest2[i].checked) {rate_score[1] = quest2[i].value;count = count+1;}
-            if(quest3[i].checked) {rate_score[2] = quest3[i].value;count = count+1;}
-            if(quest4[i].checked) {rate_score[3] = quest4[i].value;count = count+1;}
-            if(quest5[i].checked) {rate_score[4] = quest5[i].value;count = count+1;} 
-        }
-        var score = (parseInt(rate_score[0]) + parseInt(rate_score[1]) + parseInt(rate_score[2]) + parseInt(rate_score[3]) + parseInt(rate_score[4])) / parseInt(count);
-        var newRate = (parseFloat(rate*rate_amount) + score) / (parseInt(rate_amount) + 1);
-        newRate = newRate.toFixed(2);
-        rate_amount = parseInt(rate_amount) + 1
-
-        usersRef.set({
-            email: email,
-            phone: phone,
-            gender: gender,
-            interests: interests,
-            skills: skills, 
-            credit: credit,
-            rate: newRate,
-            username: username,
-            rate_amount: rate_amount
-        }).then(function () {
-            alert("Thank you for your feedback!");
-            resetRate();
-
-            console.log("New rate status saved");
+                    tutorRef.set({
+                        email: email,  
+                        phone: phone,
+                        gender: gender,
+                        interests: interests,
+                        skills: skills, 
+                        credit: credit,
+                        rate: newRate,
+                        username: username,
+                        rate_amount: rate_amount
+                    }).then(function () {
+                        alert("Thank you for your feedback!");
+                        resetRate();
+                        console.log("score: " + score + " rate: " + rate + " newRate: " + newRate + " rate_amount: " + rate_amount);
+                        window.location.href = "personal.html?coursePage=" + "true";
+                        console.log("New rate status saved");
+                    }).catch(function (error) {
+                        console.log("Got an error: " + error);
+                    });
+                }
+                else{
+                    alert("Please rate at least one question!");
+                }
+            }
         }).catch(function (error) {
             console.log("Got an error: " + error);
         });
+
+
     }
 
     function resetRate() {
-        // $("#ra").prop("checked", false);
         for(var i=0; i<5; i++){
             $('[name="question1"]').prop("checked", false);
             $('[name="question2"]').prop("checked", false);
@@ -343,6 +390,11 @@
         font-size: 20px;
     }
 
+    #rate_email, #rate_time, #rate_subject {
+        font-size: 16px;
+        margin-left: 10px;
+    }
+
     #quest,
     #answer {
         padding-left: 25px;
@@ -425,11 +477,11 @@
         <form id="middle_content" class="card">
             <table>
                 <tr>
-                    <td id="info" name="rate_email" colspan="2">Email</td>
+                    <td id="info" name="rate_email" colspan="2">User: <span id="rate_email"></span></td>
                 </tr>
                 <tr>
-                    <td id="info" name="rate_subject">Subject: Basketball</td>
-                    <td id="info" name="rate_time">Date: 2019-01-24</td>
+                    <td id="info" name="rate_subject">Subject: <span id="rate_subject"></span></td>
+                    <td id="info" name="rate_time">Date: <span id="rate_time"></span></td>
                 </tr>
                 <tr style="margin-top:20px;">
                     <td colspan="2">&nbsp;</td>

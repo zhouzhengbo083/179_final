@@ -10,6 +10,7 @@
 </head>
 <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
 <script type="text/javascript">
+
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyCZ59-0Z7syxxHyDbV1O8I1B8Uxq6swBV0",
@@ -121,7 +122,7 @@
                     if (doc && doc.exists) {
                         const curData = doc.data();
                         course_tutor_name = curData.username;
-                        loadCoursePage(course_title, course_start_time, course_end_time, course_tutor_name);
+                        addACourse(course_title, course_start_time, course_end_time, course_tutor_id, course_tutor_name);
                     }
                 }).catch(function (error) {
                     console.log("Got an error: " + error);
@@ -134,7 +135,7 @@
         // }
     }
 
-    function loadCoursePage(course_title, start_time, end_time, course_tutor_name){
+    function addACourse(course_title, start_time, end_time, course_tutor_id, course_tutor_name){
         try{
             var course_table = document.getElementById('course_table');
             var course_table_tr = document.createElement('tr');
@@ -151,6 +152,9 @@
             course_table_tr.appendChild(course_table_tutorName);
             course_table_tutorName.id = "course_table_tutorName";
             course_table_tutorName.innerHTML = course_tutor_name;
+            course_table_tutorName.textContent.onclick = function() {
+                goTutorPage();
+            }
 
             //course_table_date
             var course_table_date = document.createElement("td");
@@ -174,22 +178,26 @@
             course_course.id = "course_course";
             course_course.type = "button";
             course_course.value = "Course";
+            course_course.onclick = function() {
+                goCourse();
+            }
             course_table_button.appendChild(course_course);
             var course_rate = document.createElement("input");
             course_rate.id = "course_rate";
             course_rate.type = "button";
             course_rate.value = "Rate";
+            course_rate.onclick = function() {
+                goRate(course_tutor_id, course_title, start_time);
+            }
             course_table_button.appendChild(course_rate);
             var course_cancel = document.createElement("input");
             course_cancel.id = "course_cancel";
             course_cancel.type = "button";
             course_cancel.value = "Cancel";
+            course_cancel.onclick = function() {
+                cancelCourse();
+            }
             course_table_button.appendChild(course_cancel);
-
-
-            document.getElementById("course_table_tutorName").onclick=function(){goTutorPage()};
-            document.getElementById("course_course").onclick=function(){goCourse()};
-            document.getElementById("course_rate").onclick=function(){goRate()};
             
         }catch(error){
             console.log(error);
@@ -1936,6 +1944,26 @@
     tabs[2].style.display = 'none';
     tabs[3].style.display = 'none';
 
+    var quest = window.location.search.substr(12);
+    if(quest == "true") {
+        spans[3].style.display = 'block';
+        spans[3].style.background = '#162f59';
+        spans[3].style.color = '#e5f2f8';
+        tabs[3].style.display = 'block';
+
+        spans[0].style.background = '';
+        spans[0].style.color = '';
+        tabs[0].style.display = 'none';
+
+        spans[1].style.background = '';
+        spans[1].style.color = '';
+        tabs[1].style.display = 'none';
+
+        spans[2].style.background = '';
+        spans[2].style.color = '';
+        tabs[2].style.display = 'none';        
+    }
+
     spans[0].onclick = function () {
         spans[0].style.display = 'block';
         spans[0].style.background = '#162f59';
@@ -2046,8 +2074,11 @@
     function goCourse(){
         window.location='course.html';
     }
-    function goRate(){
-        window.location='rate.html';
+    function goRate(tutor_id, course_name, course_date){
+        window.location='rate.html?tutor_id=' + tutor_id + "&course_name=" + course_name + "&course_date=" + course_date;
+    }
+    function cancelCourse() {
+
     }
 
 
