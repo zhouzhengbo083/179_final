@@ -11,8 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
 <script type="text/javascript">
 
-    var isCurrentUser;
-
+    var current_user;
 
     // Initialize Firebase
     var config = {
@@ -36,9 +35,14 @@
                 const usersRef = firestore.doc("users/" + uid);
 
 
-                var query = window.location.search.substr(10);
-                if(query == uid) isCurrentUser = true;
-                else isCurrentUser = false;
+                // var query = window.location.search;
+                // if(query) {
+                //     query = query.substr(10);
+                //     if(query == uid) current_user = uid;
+                //     else current_user = query;
+                // }
+                // else
+                //     current_user = uid;
 
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
@@ -160,7 +164,7 @@
             course_table_tr.appendChild(course_table_tutorName);
             course_table_tutorName.id = "course_table_tutorName";
             course_table_tutorName.innerHTML = course_tutor_name;
-            course_table_tutorName.textContent.onclick = function() {
+            course_table_tutorName.onclick = function() {
                 goTutorPage();
             }
 
@@ -203,7 +207,7 @@
             course_cancel.type = "button";
             course_cancel.value = "Cancel";
             course_cancel.onclick = function() {
-                cancelCourse();
+                cancelCourse(course_id);
             }
             course_table_button.appendChild(course_cancel);
             
@@ -215,7 +219,10 @@
     function loadPage(user) {
 
         var uid = user.uid;
-        const usersRef = firestore.doc("users/" + uid);
+        var usersRef;
+        usersRef = firestore.doc("users/" + uid)
+        // if(current_user == uid)  usersRef = firestore.doc("users/" + uid);
+        // else usersRef = firestore.doc("users/" + current_user);
         usersRef.get().then(function (doc) {
             if (doc && doc.exists) { 
                 const curData = doc.data();
@@ -2085,8 +2092,15 @@
     function goRate(tutor_id, course_name, course_date){
         window.location='rate.html?tutor_id=' + tutor_id + "&course_name=" + course_name + "&course_date=" + course_date;
     }
-    function cancelCourse() {
-
+    function cancelCourse(course_id) {
+        var user = firebase.auth().currentUser;
+        var courseRef = firestore.doc("course/" + course_id);
+        courseRef.delete().then(function() {
+            alert("Cancelled successfully!");
+            window.location.href = "personal.html?coursePage=" + "true";
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
     }
 
 
