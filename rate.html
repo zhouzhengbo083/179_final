@@ -57,7 +57,7 @@
                         loadPage(user);
                     }
                 }).catch(function (error) {
-                    alert("Got an error: " + error);
+                    console.log("Got an error: " + error);
                 });
 
             }
@@ -121,8 +121,9 @@
             if(quest5[i].checked) {rate_score[4] = quest5[i].value;count = count+1;} 
         }
         var score = (parseInt(rate_score[0]) + parseInt(rate_score[1]) + parseInt(rate_score[2]) + parseInt(rate_score[3]) + parseInt(rate_score[4])) / parseInt(count);
-        var newRate = (rate*rate_amount + score) / (rate_amount + 1);
+        var newRate = (parseFloat(rate*rate_amount) + score) / (parseInt(rate_amount) + 1);
         newRate = newRate.toFixed(2);
+        rate_amount = parseInt(rate_amount) + 1
 
         usersRef.set({
             email: email,
@@ -133,12 +134,26 @@
             credit: credit,
             rate: newRate,
             username: username,
-            rate_amount: rate_amount + 1
+            rate_amount: rate_amount
         }).then(function () {
-            alert("Status saved");
+            alert("Thank you for your feedback!");
+            resetRate();
+
+            console.log("New rate status saved");
         }).catch(function (error) {
-            alert("Got an error: " + error);
+            console.log("Got an error: " + error);
         });
+    }
+
+    function resetRate() {
+        // $("#ra").prop("checked", false);
+        for(var i=0; i<5; i++){
+            $('[name="question1"]').prop("checked", false);
+            $('[name="question2"]').prop("checked", false);
+            $('[name="question3"]').prop("checked", false);
+            $('[name="question4"]').prop("checked", false);
+            $('[name="question5"]').prop("checked", false);
+        }
     }
 
 
@@ -360,7 +375,6 @@
 
     #butto {
         text-align: center;
-        padding-left: 30px;
         padding-top: 75px;
     }
 
@@ -482,7 +496,7 @@
                 </tr>
                 <tr>
                     <td id="butto"><input type="button" value="Submit" onclick="updateRate()"></td>
-                    <td id="butto"><input type="button" value="Reset"></td>
+                    <td id="butto"><input type="button" value="Reset" onclick="resetRate()"></td>
                 </tr>
             </table>
         </form>

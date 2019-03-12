@@ -301,9 +301,6 @@
                     interestRow[2].style.display = 'none';
                 }
 
-
-                alert(credit + "   rate   " + rate);
-
                 if (phone) document.getElementById('phone_input').value = phone;
                 else document.getElementById('phone_input').value = '';
 
@@ -319,7 +316,7 @@
             }
             // Load course information
         }).catch(function (error) {
-            alert("Got an error: " + error);
+            console.log("Got an error: " + error);
         });
 
 
@@ -400,6 +397,12 @@
         else document.getElementById('info_rate').textContent = '0';
 
         setUserInfo(user, username);
+        loadPage(user);
+    }
+
+    function resetInfo() {
+        var user = firebase.auth().currentUser;
+        loadPage(user);
     }
 
     function updateUsername() {
@@ -1613,7 +1616,7 @@
                             </tr>
                             <tr>
                                 <td id="info_submit"><input type="button" value="Submit" onclick="updateInfo()"></td>
-                                <td id="info_reset"><input type="button" value="Reset"></td>
+                                <td id="info_reset"><input type="button" value="Reset" onclick="resetInfo()"></td>
                             </tr>
                         </table>
                         <div id="separate"></div>
