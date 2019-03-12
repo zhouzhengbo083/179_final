@@ -23,6 +23,23 @@
 
 <script type="text/javascript">
 
+    function getQuery(query) {
+        var request = window.location.search.substr(1);
+        var queries = request.split("&");
+        for(var i=0; i<queries.length; i++) {
+            query_pair = queries[i].split("=");
+            if(query_pair[0] == query)
+                return query_pair[1];
+        }
+        return (false);
+    }
+
+    var course_id = getQuery("course_id");
+    var course_name = getQuery("course_name");
+    var tutor_id = getQuery("tutor_id");
+    var tutor_name = getQuery("tutor_name");
+    console.log("tutor_id: " + tutor_id + "\n course_name: " + course_name + "\n course_id: " + course_id);
+
     var firestore = firebase.firestore();
     window.onload = function () {
         firebase.auth().onAuthStateChanged(function (user) {
@@ -70,6 +87,11 @@
         else if (user.email) {
             document.getElementById('title_username').textContent = user.email;
         }
+
+        document.getElementById("username").textContent = tutor_name;
+        document.getElementById("subject").textContent = course_name;
+
+        
     }
     function signout() {
 
