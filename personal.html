@@ -34,16 +34,6 @@
                 var email, credit, gender, username, phone, interests, skills, rate;
                 const usersRef = firestore.doc("users/" + uid);
 
-
-                // var query = window.location.search;
-                // if(query) {
-                //     query = query.substr(10);
-                //     if(query == uid) current_user = uid;
-                //     else current_user = query;
-                // }
-                // else
-                //     current_user = uid;
-
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('top1').style.display = 'none';
@@ -165,7 +155,7 @@
             course_table_tutorName.id = "course_table_tutorName";
             course_table_tutorName.innerHTML = course_tutor_name;
             course_table_tutorName.onclick = function() {
-                goTutorPage();
+                goTutorPage(course_tutor_id);
             }
 
             //course_table_date
@@ -384,6 +374,7 @@
             credit: credit,
             rate: rate,
             username: username,
+            email: email,
             rate_amount: rate_amount
         }).then(function () {
             console.log("Status saved");
@@ -462,6 +453,7 @@
                 interests = curData.interests;
                 credit = curData.credit;
                 rate = curData.rate;
+                email = curData.email;
                 rate_amount = curData.rate_amount;
                 
                 username = curData.username;
@@ -475,6 +467,7 @@
                     interests: interests,
                     skills: skills,
                     credit: credit,
+                    email: email,
                     rate: rate,
                     rate_amount: rate_amount,
                     username: username
@@ -507,6 +500,7 @@
                 gender = curData.gender;
                 phone = curData.phone;
                 credit = curData.credit;
+                email = user.email;
                 rate = curData.rate;
                 interests = curData.interests;
                 username = curData.username;
@@ -527,6 +521,7 @@
                         interests: interests,
                         credit: credit,
                         rate: rate,
+                        email: email,
                         rate_amount: rate_amount,
                         username: username
                     }).then(function () {
@@ -564,6 +559,7 @@
                 phone = curData.phone;
                 skills = curData.skills;
                 credit = curData.credit;
+                email = curData.email;
                 rate = curData.rate;
                 username = curData.username;
                 rate_amount = curData.rate_amount;
@@ -577,6 +573,7 @@
                     interests: interests,
                     skills: skills,
                     credit: credit,
+                    email: email,
                     rate: rate,
                     rate_amount: rate_amount,
                     username: username
@@ -608,6 +605,7 @@
                 gender = curData.gender;
                 phone = curData.phone;
                 skills = curData.skills;
+                email = curData.email;
                 credit = curData.credit;
                 rate = curData.rate;
                 username = curData.username;
@@ -626,6 +624,7 @@
                         interests: interests,
                         skills: skills,
                         credit: credit,
+                        email: email,
                         rate: rate,
                         rate_amount: rate_amount,
                         username: username
@@ -873,9 +872,12 @@
         padding-top: 5px;
     }
 
+    #info_table_top tr td{
+        padding-top: 10px;
+    }
+
     #tab_info table tr td {
         text-align: left;
-        margin-top: 0;
         display: block;
         float: left;
     }
@@ -910,7 +912,7 @@
     }
 
     #info_skill,
-    #info_interest {
+    #info_interests {
         width: 300px;
         line-height: 30px;
         display: block;
@@ -918,12 +920,12 @@
     }
 
     #info_skill_table {
-        margin-top: 12px;
+        margin-top: 3px;
         width: 300px;
     }
 
     #info_interest_table {
-        margin-top: 20px;
+        margin-top: 3px;
         width: 300px;
     }
 
@@ -984,14 +986,14 @@
     #separate {
         border-bottom: 1px solid #b2b2b2;
         width: 600px;
-        height: 40px;
+        height: 60px;
         margin-top: 45px;
     }
 
 
     #info_table {
         width: 600px;
-        margin-top: 5px;
+        margin-top: 10px;
     }
 
     #info_table tr {
@@ -1099,6 +1101,14 @@
     #video_like {
         float: right;
         width: 20px;
+        margin-right: 10px;
+        margin-top: -3px;
+    }
+
+    #like_amount {
+        float: right;
+        margin-right: 0;
+        margin-top: 0;
     }
 
     #add_video p {
@@ -1614,7 +1624,7 @@
                 </h3>
                 <ul id="tab_content">
                     <li id="tab_info" name="tab">
-                        <table>
+                        <table id="info_table_top">
                             <tr>
                                 <td id="info_title">Username</td>
                                 <td id="info_username">username</td>
@@ -1729,14 +1739,16 @@
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
                                 </tr>
@@ -1745,14 +1757,16 @@
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
                                     <td id="video_box" style="margin-left:20px;">
                                         <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
                                             <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
                                 </tr>
@@ -2084,7 +2098,7 @@
     }
 
     function goTutorPage(tutor_id){
-        window.location='personal.html?tutor_id=' + tutor_id;
+        window.location='user.html?tutor_id=' + tutor_id;
     }
     function goCourse(course_id, course_name, tutor_id, tutor_name){
         window.location='course.html?course_id=' + course_id + "&course_name=" + course_name + "&tutor_id=" + tutor_id + "&tutor_name=" + tutor_name;
