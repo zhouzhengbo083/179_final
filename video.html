@@ -23,7 +23,15 @@
 
 <script type="text/javascript">
     var firestore = firebase.firestore();
+    
+    
     window.onload = function () {
+        var currentVideo = window.location.search.substr(10);
+        
+        
+        
+        
+        
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 var uid = user.uid;
@@ -57,7 +65,21 @@
                 }).catch(function (error) {
                     alert("Got an error: " + error);
                 });
-
+            //load the page for video
+            var title = currentVideo;
+            document.getElementById("video_title").textContent = "Title: "+title;
+            var storageRef = firebase.storage().ref();
+            var file = currentVideo+'.mp4';
+            
+            storageRef.child('videoes/'+file).getDownloadURL().then(function(url) {
+                    
+                    
+                    var img = document.getElementById('video_mp4');
+                    
+                    img.src = url;
+                    
+                    
+                }); 
             }
         });
     };
@@ -80,6 +102,11 @@
             alert(error);
         });
 
+    }
+    function addfunction(){
+        var loves = parseInt(document.getElementById('video_username').innerText);
+        var love = loves +1;
+        document.getElementById('video_username').textContent = love;
     }
 </script>
 <style>
@@ -265,7 +292,7 @@
     #video {
         width: 625px;
         height: 400px;
-        background-color: yellow;
+        background-color:transparent;
         left: 0;
         right: 0;
         margin: auto;
@@ -291,9 +318,9 @@
     #video_like {
         width: 25px;
         height: 25px;
-        float: right;
+        float: left;
         display: block;
-        margin-right: 20px;
+        margin-left: 250px;
     }
 
 
@@ -339,14 +366,18 @@
             <table>
                 <tr id="video_video">
                     <td>
-                        <div id="video"></div>
+                        <div id="video">
+                            
+                            <iframe id="video_mp4" width="625" height="400" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            
+                          </div>
                     </td>
                 </tr>
                 <tr id="video_info">
                     <td>
                         <p id="video_title">Title</p>
-                        <p id="video_username">Username</p>
-                        <img id="video_like" src="img/like.png">
+                        
+                        <img id="video_like" src="img/like.png" onclick="addfunction()"/><p id="video_username">15</p>
                     </td>
                 </tr>
             </table>
