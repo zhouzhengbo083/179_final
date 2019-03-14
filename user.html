@@ -62,7 +62,35 @@
                 });
 
                 loadPage(user); 
-
+                var storageRef = firebase.storage().ref();
+                var users = current_user;
+                var num = 1;
+                var change = 1;
+                firestore.collection("video").where("user_id", "==", users)
+                .get().then(function(querySnapshot) 
+                {
+                querySnapshot.forEach(function(doc) 
+                {
+                var doc_id = doc.id;
+                var doc_data = doc.data();
+                var file = doc.data().category+".png";
+                
+                var like_amounts = "like_amount_"+num;
+                var videoTitle = "video_title_"+num;
+                document.getElementById(like_amounts).textContent = doc_data.likes;
+                document.getElementById(videoTitle).textContent = doc_data.category;
+                var videoBox = "video_box_"+num;
+                document.getElementById(videoBox).style.display = 'block';
+                storageRef.child('videoes/'+file).getDownloadURL().then(function(url) {
+                    
+                    var myimg = 'img_'+change;
+                    var img = document.getElementById(myimg);
+                    img.src = url;
+                    change++;
+                });
+                num++;
+                })
+                }); 
             }
         });
     }; 
@@ -177,10 +205,10 @@
                         interestRow[2].style.display = 'none';
                     }
 
-                    if (tutor_phone) document.getElementById('phone_input').value = tutor_phone;
+                    if (tutor_phone) {document.getElementById('phone_input').value = tutor_phone;}
                     else document.getElementById('phone_input').value = '';
 
-                    if (tutor_rate) document.getElementById('info_rate').textContent = tutor_rate;
+                    if (tutor_rate) {document.getElementById('info_rate').textContent = tutor_rate;}
                     else document.getElementById('info_rate').textContent = '0';
 
                     document.getElementById('info_username').textContent = tutor_username;
@@ -608,10 +636,17 @@
         float: left;
     }
 
-    #video_box {
+    .video_box {
         width: 275px;
         height: 170px;
         display: block;
+    }
+    
+    .imgStyle{
+        width: 275px;
+        height: 125px;
+        display: block;
+         
     }
 
     #video{
@@ -626,12 +661,18 @@
         margin-top: 10px;
     }
 
-    #video_title {
+    .video_title {
         width: 200px;
         height: 25px;
         margin-top: 0;
         float: left;
         display: block;
+    }
+
+    .like_amount {
+        float: right;
+        margin-right: 0;
+        margin-top: 0;
     }
 
     #video_like {
@@ -747,34 +788,38 @@
                         <form>
                             <table id="video_table">
                                 <tr>
-                                    <td id="video_box">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_1" style="margin-left:20px;display: none;">
+                                        <div id="video" onclick="playVideo();"><img class="imgStyle" id="img_1"/></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p class="video_title" id="video_title_1">Basketball</p>
+                                            <p class="like_amount" id="like_amount_1">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(1)">
                                         </div>
                                     </td>
-                                    <td id="video_box" style="margin-left:20px;">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_2" style="margin-left:20px;display: none;" >
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_2"/></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p class="video_title" id="video_title_2">Basketball</p>
+                                            <p class="like_amount" id="like_amount_2">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(2)">
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td id="video_box">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_3" style="margin-left:20px;display: none;">
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_3"></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p class="video_title" id="video_title_3">Basketball</p>
+                                            <p class="like_amount" id="like_amount_3">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(3)">
                                         </div>
                                     </td>
-                                    <td id="video_box" style="margin-left:20px;">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_4" style="margin-left:20px;display:none;">
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_4"></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <img id="video_like" src="img/like.png">
+                                            <p class="video_title" id="video_title_4">Basketball</p>
+                                            <p class="like_amount" id="like_amount_4">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(4)">
                                         </div>
                                     </td>
                                 </tr>
