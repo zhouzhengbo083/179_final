@@ -26,6 +26,28 @@
     var firestore = firebase.firestore();
 
     window.onload = function () {
+        //upload the video
+        var fileButton = document.getElementById('fileButton');
+        //listen for file selection
+        fileButton.addEventListener('change',function(e){
+           var file = e.target.files[0];
+           
+           var storageRef = firebase.storage().ref('videoes/'+file.name);
+        // upload the video
+           var task = storageRef.put(file);
+            
+    task.on('state_change',
+    function progress(snapshot)
+    {
+         var percentage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+         uploader.value = percentage;
+    },
+    function error(err){
+    },
+    function complete(){
+    });
+    })
+        
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 console.log(user);
@@ -95,7 +117,43 @@
                 });
 
                 loadPage(user); 
-
+                //load the page for video
+                var storageRef = firebase.storage().ref();
+                var users = firebase.auth().currentUser.uid;
+                var num = 1;
+                var change = 1;
+                var myfile = new Array();
+                firestore.collection("video").where("user_id", "==", users)
+                .get().then(function(querySnapshot) 
+                {
+                querySnapshot.forEach(function(doc) 
+                {
+                var doc_id = doc.id;
+                var doc_data = doc.data();
+                
+                var file = doc.data().category+".png";
+                myfile.push(file);
+                var like_amounts = "like_amount_"+num;
+                var videoTitle = "video_title_"+num;
+                
+                var videoBox = "video_box_"+num;
+                document.getElementById(like_amounts).textContent = doc_data.likes;
+                document.getElementById(videoTitle).textContent = doc_data.category;
+                document.getElementById(videoBox).style.display = 'block';
+                num++;
+                })
+                window.alert(myfile.length);
+                for(var i=0;i<myfile.length;i++)
+                {
+                    storageRef.child('videoes/'+myfile[i]).getDownloadURL().then(function(url) {
+                    
+                    var myimg = 'img_'+change;
+                    var img = document.getElementById(myimg);
+                    img.src = url;
+                    change++;
+                });
+                } }); 
+                
             }
         });
     }; 
@@ -651,7 +709,23 @@
 
 
     }
+    function addfunction()
+    {
+        var user = firebase.auth().currentUser;
+        var element = "like_amount_"+arguments[0];
+        var loves = parseInt(document.getElementById(element).innerText);
+        var love = loves +1;
+        firestore.collection("video").where("likes", "==", loves)
+        .get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            firestore.doc("video/" + doc.id).update({
+                likes : love
+            });
 
+    })
+        }); 
+        document.getElementById(element).textContent = love
+        }
 </script>
 <style>
     #top {
@@ -1071,12 +1145,17 @@
         float: left;
     }
 
-    #video_box {
+    .video_box {
         width: 275px;
         height: 170px;
         display: block;
     }
-
+    .imgStyle{
+        width: 275px;
+        height: 125px;
+        display: block;
+         
+    }
     #video,
     #add_video {
         width: 275px;
@@ -1090,7 +1169,7 @@
         margin-top: 10px;
     }
 
-    #video_title {
+    .video_title {
         width: 200px;
         height: 25px;
         margin-top: 0;
@@ -1105,7 +1184,7 @@
         margin-top: -3px;
     }
 
-    #like_amount {
+    .like_amount {
         float: right;
         margin-right: 0;
         margin-top: 0;
@@ -1735,43 +1814,43 @@
                         <form>
                             <table id="video_table">
                                 <tr>
-                                    <td id="video_box">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_1" style="margin-left:20px;display: none;">
+                                        <div id="video" onclick="playVideo();"><img class="imgStyle" id="img_1"/></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <p id="like_amount">27</p>
-                                            <img id="video_like" src="img/liked.png">
+                                            <p class="video_title" id="video_title_1">Basketball</p>
+                                            <p class="like_amount" id="like_amount_1">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(1)">
                                         </div>
                                     </td>
-                                    <td id="video_box" style="margin-left:20px;">
-                                        <div id="video" onclick="playVideo()"></div>
+                                    <td class="video_box" id="video_box_2" style="margin-left:20px;display: none;" >
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_2"/></div>
                                         <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <p id="like_amount">27</p>
-                                            <img id="video_like" src="img/liked.png">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="video_box">
-                                        <div id="video" onclick="playVideo()"></div>
-                                        <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <p id="like_amount">27</p>
-                                            <img id="video_like" src="img/liked.png">
-                                        </div>
-                                    </td>
-                                    <td id="video_box" style="margin-left:20px;">
-                                        <div id="video" onclick="playVideo()"></div>
-                                        <div id="video_info">
-                                            <p id="video_title">Basketball</p>
-                                            <p id="like_amount">27</p>
-                                            <img id="video_like" src="img/liked.png">
+                                            <p class="video_title" id="video_title_2">Basketball</p>
+                                            <p class="like_amount" id="like_amount_2">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(2)">
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td id="video_box">
+                                    <td class="video_box" id="video_box_3" style="margin-left:20px;display: none;">
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_3"></div>
+                                        <div id="video_info">
+                                            <p class="video_title" id="video_title_3">Basketball</p>
+                                            <p class="like_amount" id="like_amount_3">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(3)">
+                                        </div>
+                                    </td>
+                                    <td class="video_box" id="video_box_4" style="margin-left:20px;display:none;">
+                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_4"></div>
+                                        <div id="video_info">
+                                            <p class="video_title" id="video_title_4">Basketball</p>
+                                            <p class="like_amount" id="like_amount_4">27</p>
+                                            <img id="video_like" src="img/liked.png" onclick="addfunction(4)">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="video_box" style="margin-left:20px;">
                                         <div id="add_video" onclick="addVideo()">
                                             <p>+</p>
                                         </div>
@@ -1890,17 +1969,16 @@
                         </td>
                     </tr>
                     <tr id="mask_video_category">
-                        <td><input type="text" placeholder="Enter the category of this video"></td>
+                        <td><input type="text" id="category" placeholder="Enter the category of this video"></td></td>
                     </tr>
                     <tr id="mask_video_url">
                         <td>
-                            <input id="url" type="url">
-                            <input id="choose" type="button" value="Choose">
+                            <input type="file" value="upload" id="fileButton" style="margin-left:50px;margin-top:5px;"/>
                         </td>
                     </tr>
                     <tr id="mask_video_button">
                         <td>
-                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
+                            <input id="mask_button" type="button" value="Submit" onclick="submitButton()" style="margin-left:45px;">
                             <input id="mask_button" type="button" value="Cancel" style="margin-left:30px"
                                 onclick="quit()">
                         </td>
@@ -2115,6 +2193,32 @@
         }).catch(function(error) {
             console.error("Error removing document: ", error);
         });
+    }
+    function submitButton()
+    {
+    function inputVideo(){
+    
+    var user = firebase.auth().currentUser;
+    var uid = user.uid;
+    const docVideo = firestore.collection("video").doc();
+    
+    var categ = document.getElementById('category').value;
+    
+    docVideo.set({
+         category : categ,
+         likes : 0,
+         url : "www.youtube.com",
+         user_id :uid
+        }).then(function () {
+            alert("Status saved");
+        }).catch(function (error) {
+            alert("Got an error: " + error);
+        });
+
+    };
+    inputVideo();
+    
+    quit();
     }
 
 
