@@ -791,7 +791,7 @@
                                     <td class="video_box" id="video_box_1" style="margin-left:20px;display: none;">
                                         <div id="video" onclick="playVideo();"><img class="imgStyle" id="img_1"/></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_1">Basketball</p>
+                                            <p class="video_title" id="video_title_1" onclick="goVideoPage(1)">Basketball</p>
                                             <p class="like_amount" id="like_amount_1">27</p>
                                             <img id="video_like" src="img/liked.png" onclick="addfunction(1)">
                                         </div>
@@ -799,7 +799,7 @@
                                     <td class="video_box" id="video_box_2" style="margin-left:20px;display: none;" >
                                         <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_2"/></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_2">Basketball</p>
+                                            <p class="video_title" id="video_title_2" onclick="goVideoPage(2)">Basketball</p>
                                             <p class="like_amount" id="like_amount_2">27</p>
                                             <img id="video_like" src="img/liked.png" onclick="addfunction(2)">
                                         </div>
@@ -809,7 +809,7 @@
                                     <td class="video_box" id="video_box_3" style="margin-left:20px;display: none;">
                                         <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_3"></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_3">Basketball</p>
+                                            <p class="video_title" id="video_title_3" onclick="goVideoPage(3)">Basketball</p>
                                             <p class="like_amount" id="like_amount_3">27</p>
                                             <img id="video_like" src="img/liked.png" onclick="addfunction(3)">
                                         </div>
@@ -817,7 +817,7 @@
                                     <td class="video_box" id="video_box_4" style="margin-left:20px;display:none;">
                                         <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_4"></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_4">Basketball</p>
+                                            <p class="video_title" id="video_title_4" onclick="goVideoPage(4)">Basketball</p>
                                             <p class="like_amount" id="like_amount_4">27</p>
                                             <img id="video_like" src="img/liked.png" onclick="addfunction(4)">
                                         </div>
@@ -897,7 +897,12 @@
         // window.location.href="calendar.action?cur="+cur;
     }
 
-
+    function goVideoPage(){
+        var category = 'video_title_' + arguments[0];
+        var video_category = document.getElementById(category).innerHTML;
+        
+        window.location='video.html?video_id=' + video_category;
+    }
 </script>
 
 </html>
