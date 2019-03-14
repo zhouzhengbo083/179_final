@@ -3,6 +3,8 @@
 
 <head>
     <title>Hobby-ever</title>
+    <script src="script/calendar.js"></script>
+    <link href="script/calendar.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
@@ -26,28 +28,6 @@
     var firestore = firebase.firestore();
 
     window.onload = function () {
-        //upload the video
-        var fileButton = document.getElementById('fileButton');
-        //listen for file selection
-        fileButton.addEventListener('change',function(e){
-           var file = e.target.files[0];
-           
-           var storageRef = firebase.storage().ref('videoes/'+file.name);
-        // upload the video
-           var task = storageRef.put(file);
-            
-    task.on('state_change',
-    function progress(snapshot)
-    {
-         var percentage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
-         uploader.value = percentage;
-    },
-    function error(err){
-    },
-    function complete(){
-    });
-    })
-        
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 console.log(user);
@@ -77,6 +57,7 @@
                         user.rate = curData.rate;
                         user.rate_amount = curData.rate_amount;
                         loadPage(user);
+                        loadCalendar(user);
                     }
                 }).catch(function (error) {
                     console.log("Got an error: " + error);
@@ -84,11 +65,11 @@
 
                 var course_user_id = uid;
                 var course_user = 'user1';
-                firebase.firestore().collection("course").where("user1_id", "==", uid).get().then(function(querySnapshot) {
+                firebase.firestore().collection("course").where("user1_id", "==", uid).get().then(function (querySnapshot) {
 
                     var courseIdList = new Array();
                     var course_num = 0;
-                    querySnapshot.forEach(function(doc) {
+                    querySnapshot.forEach(function (doc) {
 
                         console.log(doc.id, " --> ", doc.data());
                         courseIdList[course_num] = doc.id;
@@ -97,14 +78,14 @@
                         loadCourse(courseIdList, course_num, course_user_id, course_user);
                     });
                     // loadCourse(courseIdList, course_num, course_user_id, course_user);
-                }).catch(function(error) {
+                }).catch(function (error) {
                     console.log("ERROR: " + error);
                 });
 
-                firebase.firestore().collection("course").where("user2_id", "==", uid).get().then(function(querySnapshot) {  
-                    var courseIdList = new Array(); 
+                firebase.firestore().collection("course").where("user2_id", "==", uid).get().then(function (querySnapshot) {
+                    var courseIdList = new Array();
                     var course_num = 0;
-                    querySnapshot.forEach(function(doc) {
+                    querySnapshot.forEach(function (doc) {
                         console.log(doc.id, " --> ", doc.data());
                         courseIdList[course_num] = doc.id;
                         course_num = parseInt(course_num) + 1;
@@ -112,65 +93,29 @@
                         loadCourse(courseIdList, course_num, course_user_id, course_user);
                     });
                     // loadCourse(courseIdList, course_num, course_user_id, course_user);
-                }).catch(function(error) {
+                }).catch(function (error) {
                     console.log("ERROR: " + error);
                 });
 
-                loadPage(user); 
-                //load the page for video
-                var storageRef = firebase.storage().ref();
-                var users = firebase.auth().currentUser.uid;
-                var num = 1;
-                var change = 1;
-                var myfile = new Array();
-                firestore.collection("video").where("user_id", "==", users)
-                .get().then(function(querySnapshot) 
-                {
-                querySnapshot.forEach(function(doc) 
-                {
-                var doc_id = doc.id;
-                var doc_data = doc.data();
-                
-                var file = doc.data().category+".png";
-                myfile.push(file);
-                var like_amounts = "like_amount_"+num;
-                var videoTitle = "video_title_"+num;
-                
-                var videoBox = "video_box_"+num;
-                document.getElementById(like_amounts).textContent = doc_data.likes;
-                document.getElementById(videoTitle).textContent = doc_data.category;
-                document.getElementById(videoBox).style.display = 'block';
-                num++;
-                })
-                window.alert(myfile.length);
-                for(var i=0;i<myfile.length;i++)
-                {
-                    storageRef.child('videoes/'+myfile[i]).getDownloadURL().then(function(url) {
-                    
-                    var myimg = 'img_'+change;
-                    var img = document.getElementById(myimg);
-                    img.src = url;
-                    change++;
-                });
-                } }); 
-                
+                loadPage(user);
+
             }
         });
-    }; 
+    };
 
-    function loadCourse(courseIdList, course_num, course_user_id, course_user){
+    function loadCourse(courseIdList, course_num, course_user_id, course_user) {
         var course_title, course_start_time, course_end_time, course_tutor_name, course_tutor_id;
         console.log("course_user: " + course_user);
-        var courseRef = firestore.doc("course/" + courseIdList[course_num-1]);
+        var courseRef = firestore.doc("course/" + courseIdList[course_num - 1]);
         courseRef.get().then(function (doc) {
             if (doc && doc.exists) {
                 var curData = doc.data();
-                if(course_user == "user1"){
+                if (course_user == "user1") {
 
                     course_title = curData.course_name_user1;
                     course_tutor_id = curData.user2_id;
                 }
-                else if(course_user == "user2"){
+                else if (course_user == "user2") {
                     course_title = curData.course_name_user2;
                     course_tutor_id = curData.user1_id;
                 }
@@ -182,7 +127,7 @@
                     if (doc && doc.exists) {
                         const curData = doc.data();
                         course_tutor_name = curData.username;
-                        addACourse(courseIdList[course_num-1], course_title, course_start_time, course_end_time, course_tutor_id, course_tutor_name);
+                        addACourse(courseIdList[course_num - 1], course_title, course_start_time, course_end_time, course_tutor_id, course_tutor_name);
                     }
                 }).catch(function (error) {
                     console.log("Got an error: " + error);
@@ -195,12 +140,12 @@
         // }
     }
 
-    function addACourse(course_id, course_title, start_time, end_time, course_tutor_id, course_tutor_name){
-        try{
+    function addACourse(course_id, course_title, start_time, end_time, course_tutor_id, course_tutor_name) {
+        try {
             var course_table = document.getElementById('course_table');
             var course_table_tr = document.createElement('tr');
             course_table.appendChild(course_table_tr);
-            
+
             //course_table_title
             var course_table_title = document.createElement("td");
             course_table_tr.appendChild(course_table_title);
@@ -212,7 +157,7 @@
             course_table_tr.appendChild(course_table_tutorName);
             course_table_tutorName.id = "course_table_tutorName";
             course_table_tutorName.innerHTML = course_tutor_name;
-            course_table_tutorName.onclick = function() {
+            course_table_tutorName.onclick = function () {
                 goTutorPage(course_tutor_id);
             }
 
@@ -238,7 +183,7 @@
             course_course.id = "course_course";
             course_course.type = "button";
             course_course.value = "Course";
-            course_course.onclick = function() {
+            course_course.onclick = function () {
                 goCourse(course_id, course_title, course_tutor_id, course_tutor_name);
             }
             course_table_button.appendChild(course_course);
@@ -246,7 +191,7 @@
             course_rate.id = "course_rate";
             course_rate.type = "button";
             course_rate.value = "Rate";
-            course_rate.onclick = function() {
+            course_rate.onclick = function () {
                 goRate(course_tutor_id, course_title, start_time);
             }
             course_table_button.appendChild(course_rate);
@@ -254,12 +199,12 @@
             course_cancel.id = "course_cancel";
             course_cancel.type = "button";
             course_cancel.value = "Cancel";
-            course_cancel.onclick = function() {
+            course_cancel.onclick = function () {
                 cancelCourse(course_id);
             }
             course_table_button.appendChild(course_cancel);
-            
-        }catch(error){
+
+        } catch (error) {
             console.log(error);
         }
     }
@@ -272,7 +217,7 @@
         // if(current_user == uid)  usersRef = firestore.doc("users/" + uid);
         // else usersRef = firestore.doc("users/" + current_user);
         usersRef.get().then(function (doc) {
-            if (doc && doc.exists) { 
+            if (doc && doc.exists) {
                 const curData = doc.data();
                 user.email = curData.email;
                 user.credit = curData.credit;
@@ -391,7 +336,7 @@
         });
 
 
- 
+
 
     }
 
@@ -410,9 +355,19 @@
     function setUserInfo(user, username) {
         var uid = user.uid;
         var gender;
+        if (user.rate_amount == undefined) {
+            user.rate_amount = 0;
+        }
         var rate_amount = user.rate_amount;
+        if (user.interests == undefined) {
+            user.interests = new Array();
+        }
+        if (user.skills == undefined) {
+            user.skills = new Array();
+        }
         var interests = user.interests;
         var skills = user.skills;
+        var email = user.email;
         var credit = document.getElementById("info_credit").textContent;
         var rate = document.getElementById("info_rate").textContent;
         var phone = document.getElementById("phone_input").value;
@@ -513,7 +468,7 @@
                 rate = curData.rate;
                 email = curData.email;
                 rate_amount = curData.rate_amount;
-                
+
                 username = curData.username;
                 loadPage(user);
 
@@ -550,7 +505,7 @@
     function add_skill() {
         var user = firebase.auth().currentUser;
         const usersRef = firestore.doc("users/" + user.uid);
-        var phone, gender,credit, rate, username;
+        var phone, gender, credit, rate, username;
         usersRef.get().then(function (doc) {
             if (doc && doc.exists) {
                 const curData = doc.data();
@@ -709,23 +664,53 @@
 
 
     }
-    function addfunction()
-    {
+
+    function add_event() {
         var user = firebase.auth().currentUser;
-        var element = "like_amount_"+arguments[0];
-        var loves = parseInt(document.getElementById(element).innerText);
-        var love = loves +1;
-        firestore.collection("video").where("likes", "==", loves)
-        .get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            firestore.doc("video/" + doc.id).update({
-                likes : love
+        var uid = user.uid;
+        // const calRef = firestore.doc("calendar/");
+        var new_event_title = document.getElementById("new_event_title").value;
+        var new_event_start_date = document.getElementById("new_event_start_date").textContent;
+        var new_event_start_time = document.getElementById("new_event_start_time").value;
+        var new_event_end_date = document.getElementById("new_event_end_date").textContent;
+        var new_event_end_time = document.getElementById("new_event_end_time").value;
+        var new_start = new_event_start_date + "  " + new_event_start_time;
+        var new_end = new_event_end_date + "  " + new_event_end_time;
+
+        firestore.collection("calendar").add({
+            event_name: new_event_title,
+            start_time: new_start,
+            end_time: new_end,
+            user_id: uid
+        })
+            .then(function (docRef) {
+                document.getElementById("mask_calendar").style.display = 'none';
+                alert("New event added!");
+                console.log("Document written with ID: ", docRef.id);
+
+                document.getElementById("new_event_title").value = "";
+                document.getElementById("new_event_start_time").value = "";
+                document.getElementById("new_event_end_time").value = "";
+
+                firebase.firestore().collection("calendar").where("user_id", "==", uid).get().then(function (querySnapshot) {
+                    var eventIdList = new Array();
+                    var event_num = 0;
+                    querySnapshot.forEach(function (doc) {
+                        console.log(doc.id, " --> ", doc.data());
+                        eventIdList[event_num] = doc.id;
+                        event_num = parseInt(event_num) + 1;
+                        loadEvent(uid, eventIdList, event_num, chosen_date);
+                    });
+                }).catch(function (error) {
+                    console.log("ERROR: " + error);
+                });
+            })
+            .catch(function (error) {
+                console.error("Error adding document: ", error);
             });
 
-    })
-        }); 
-        document.getElementById(element).textContent = love
-        }
+    }
+
 </script>
 <style>
     #top {
@@ -929,13 +914,12 @@
         right: 0;
         margin: auto;
         display: block;
-        border: 1px dashed #b2b2b2; 
+        border: 1px dashed #b2b2b2;
     }
 
     #tab_info,
     #tab_video,
-    #tab_calendar,
-    #tab_course {
+    #tab_calendar {
         display: block;
         width: 600px;
         height: 800px;
@@ -946,7 +930,7 @@
         padding-top: 5px;
     }
 
-    #info_table_top tr td{
+    #info_table_top tr td {
         padding-top: 10px;
     }
 
@@ -1145,17 +1129,12 @@
         float: left;
     }
 
-    .video_box {
+    #video_box {
         width: 275px;
         height: 170px;
         display: block;
     }
-    .imgStyle{
-        width: 275px;
-        height: 125px;
-        display: block;
-         
-    }
+
     #video,
     #add_video {
         width: 275px;
@@ -1169,7 +1148,7 @@
         margin-top: 10px;
     }
 
-    .video_title {
+    #video_title {
         width: 200px;
         height: 25px;
         margin-top: 0;
@@ -1184,7 +1163,7 @@
         margin-top: -3px;
     }
 
-    .like_amount {
+    #like_amount {
         float: right;
         margin-right: 0;
         margin-top: 0;
@@ -1208,68 +1187,82 @@
         padding-top: 30px;
     }
 
-    #calendar {
+    #calendar_box {
         margin-top: 20px;
         width: 575px;
-        height: 375px;
+        height: 462px;
         left: 0;
         right: 0;
         margin: auto;
-        border-radius: 5px;
-        border: 1px solid #b2b2b2;
         margin-bottom: 30px;
     }
 
     #event_list {
         margin-top: 20px;
         width: 575px;
-        height: 275px;
+        height: 200px;
         left: 0;
         right: 0;
         margin: auto;
         border-radius: 5px;
-        border: 1px solid #b2b2b2;
+        border: 1px solid #cccccc;
     }
 
     #event_list_table {
         width: 575px;
         height: 250px;
+    }
+
+    #event_list_table_title {
+        width: 575px;
+        height: 20px;
         margin-top: 15px;
     }
 
-    #event_list_table tr {
+    #event_list_table tr,
+    #event_list_table_title tr {
         display: block;
         height: 38px;
         width: 575px;
+        text-align: center;
     }
 
-    #event_list_table tr td {
+    #event_list_table tr td,
+    #event_list_table_title tr td {
         float: left;
+        display: block;
+        text-align: center;
     }
 
     #event_title {
         display: block;
         width: 90px;
         height: 30px;
-        margin-left: 15px;
+        margin-left: 10px;
         line-height: 30px;
+        overflow-x: hidden;
+        text-align: center;
     }
 
     #event_start_date,
     #event_end_date {
         display: block;
-        width: 155px;
+        width: 165px;
         height: 30px;
-        margin-left: 8px;
         line-height: 30px;
+        text-align: center;
     }
 
     #event_connect {
         display: block;
         width: 15px;
         height: 30px;
-        margin-left: 12px;
+        margin-left: 10px;
         line-height: 30px;
+    }
+
+    #event_end_date {
+        margin-left: 5px;
     }
 
     #event_button {
@@ -1291,72 +1284,60 @@
         border: 1px solid #b2b2b2;
     }
 
-    #event_page {
-        display: block;
-        width: 460px;
-        height: 30px;
-        margin-left: 15px;
-        line-height: 30px;
-    }
-
-    #page_box {
-        width: 460px;
-        height: 30px;
-        text-align: center;
-        margin-left: 200px;
-        margin-top: 30px;
-    }
-
-    #page {
-        width: 125px;
-        height: 30px;
-        display: block;
-    }
-
-    #page input {
-        width: 15px;
-        height: 8px;
-        padding-top: -5px;
-        font-size: 16px;
-    }
-
-    #cur {
-        font-size: 15px;
-        display: inline;
-        margin-left: 0px;
-        font-weight: bold;
-    }
-
     #add_event_button {
         display: block;
-        width: 75px;
-        height: 30px;
-        margin-top: 30px;
+        width: 575px;
+        height: 12px;
         line-height: 30px;
+        padding-top: 0;
+        position: relative;
     }
 
-    #add_event_button input {
-        width: 75px;
-        height: 24px;
+    #add_button {
         display: block;
         font-size: 13px;
-        padding-left: 5px;
-        border-radius: 5px;
-        border: 1px solid #b2b2b2;
+        text-decoration: underline;
+        left: 13px;
+        top: -10px;
+        position: absolute;
+        color: #6f6f6f;
     }
 
+    #chosen_date {
+        text-align: center;
+        width: 300px;
+        height: 15px;
+        position: absolute;
+        font-size: 16px;
+        line-height: 15px;
+        left: 0;
+        right: 0;
+        top: 8px;
+        margin: auto;
+        text-decoration: none;
+    }
+
+    #tab_course {
+        display: block;
+        width: 650px;
+        height: 800px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        position: relative;
+        padding-top: 5px;
+    }
 
     #course_list {
         margin-top: 20px;
-        width: 625px;
+        width: 675px;
         height: 600px;
         left: 0;
-        right: 0;
         margin: auto;
     }
 
     #course_table {
-        width: 625px;
+        width: 675px;
         height: 600px;
         margin-top: 15px;
     }
@@ -1364,7 +1345,7 @@
     #course_table tr {
         display: block;
         height: 40px;
-        width: 625px;
+        width: 675px;
         margin-top: 20px;
     }
 
@@ -1373,7 +1354,8 @@
         float: left;
     }
 
-    #course_table_title, #course_table_title_title {
+    #course_table_title,
+    #course_table_title_title {
         display: block;
         width: 125px;
         height: 40x;
@@ -1381,9 +1363,10 @@
         text-align: center;
     }
 
-    #course_table_tutorName, #course_table_tutorName_title {
+    #course_table_tutorName,
+    #course_table_tutorName_title {
         display: block;
-        width: 90px;
+        width: 100px;
         height: 40px;
         line-height: 40px;
         text-align: center;
@@ -1396,10 +1379,15 @@
     #course_table_date_title,
     #course_table_date {
         display: block;
-        width: 180px;
+        width: 170px;
         height: 40px;
         line-height: 40px;
         text-align: center;
+        margin-right: 25px;
+    }
+
+    #course_table_date_title {
+        padding-left: 18px;
     }
 
     #course_start_time {
@@ -1413,7 +1401,7 @@
     #course_start_time,
     #course_end_time {
         display: block;
-        width: 155px;
+        width: 165px;
         height: 0px;
         margin-left: 8px;
         line-height: 20px;
@@ -1429,6 +1417,7 @@
         text-align: center;
 
     }
+
     #course_table_button {
         display: block;
         width: 180px;
@@ -1454,7 +1443,8 @@
         float: left;
     }
 
-    #course_rate, #course_course {
+    #course_rate,
+    #course_course {
         margin-right: 1px;
     }
 
@@ -1643,11 +1633,33 @@
         height: 25px;
     }
 
-    #add_event_event input,
-    #add_event_time input {
+    #add_event_event input {
         width: 190px;
         height: 25px;
         font-size: 13px;
+    }
+
+    #new_event_start_date,
+    #new_event_end_date {
+        display: block;
+        float: left;
+        width: 120px;
+        height: 25px;
+        margin-top: 0;
+        margin-left: 15px;
+        line-height: 25px;
+    }
+
+    #new_event_start_time,
+    #new_event_end_time {
+        display: block;
+        width: 68px;
+        font-size: 13px;
+        height: 25px;
+        float: left;
+        margin-top: 0;
+        margin-left: -18px;
+        padding-right: 0;
     }
 
     #mask_calendar_button td {
@@ -1682,7 +1694,7 @@
                 <li id="menu_match"><a href="match.html">Match</a></li>
                 <li id="menu_search"><a href="search.html">Search</a></li>
                 <li id="menu_rate"><a href="rate.html">Rate</a></li>
-                <li id="menu_course"><a href="course.html">Course</a></li>
+                <li id="menu_course"><a href="index.html">Course</a></li>
                 <li id="menu_personal"><a href="personal.html">Personal</a></li>
             </ul>
         </div>
@@ -1696,17 +1708,17 @@
         <div id="middle_content" class="card">
             <div id="tab">
                 <h3 id="tab_title">
-                    <span id="tab_title_info">Information</span>
-                    <span id="tab_title_video">Short Videos</span>
-                    <span id="tab_title_calendar">Calendar</span>
-                    <span id="tab_title_course">My Course</span>
+                    <span id="tab_title_info" name="spans">Information</span>
+                    <span id="tab_title_video" name="spans">Short Videos</span>
+                    <span id="tab_title_calendar" name="spans">Calendar</span>
+                    <span id="tab_title_course" name="spans">My Course</span>
                 </h3>
                 <ul id="tab_content">
                     <li id="tab_info" name="tab">
                         <table id="info_table_top">
                             <tr>
                                 <td id="info_title">Username</td>
-                                <td id="info_username">username</td>
+                                <td id="info_username"></td>
                                 <td id="info_username_modify" onclick="changeUsername()">(modify)</td>
                             </tr>
                             <tr>
@@ -1814,43 +1826,43 @@
                         <form>
                             <table id="video_table">
                                 <tr>
-                                    <td class="video_box" id="video_box_1" style="margin-left:20px;display: none;">
-                                        <div id="video" onclick="playVideo();"><img class="imgStyle" id="img_1"/></div>
+                                    <td id="video_box">
+                                        <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_1" onclick="goVideoPage(1)">Basketball</p>
-                                            <p class="like_amount" id="like_amount_1">27</p>
-                                            <img id="video_like" src="img/liked.png" onclick="addfunction(1)">
+                                            <p id="video_title">Basketball</p>
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
-                                    <td class="video_box" id="video_box_2" style="margin-left:20px;display: none;" >
-                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_2"/></div>
+                                    <td id="video_box" style="margin-left:20px;">
+                                        <div id="video" onclick="playVideo()"></div>
                                         <div id="video_info">
-                                            <p class="video_title" id="video_title_2" onclick="goVideoPage(2)">Basketball</p>
-                                            <p class="like_amount" id="like_amount_2">27</p>
-                                            <img id="video_like" src="img/liked.png" onclick="addfunction(2)">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="video_box" id="video_box_3" style="margin-left:20px;display: none;">
-                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_3"></div>
-                                        <div id="video_info">
-                                            <p class="video_title" id="video_title_3" onclick="goVideoPage(3)">Basketball</p>
-                                            <p class="like_amount" id="like_amount_3">27</p>
-                                            <img id="video_like" src="img/liked.png" onclick="addfunction(3)">
-                                        </div>
-                                    </td>
-                                    <td class="video_box" id="video_box_4" style="margin-left:20px;display:none;">
-                                        <div id="video" onclick="playVideo()"><img class="imgStyle" id="img_4"></div>
-                                        <div id="video_info">
-                                            <p class="video_title" id="video_title_4" onclick="goVideoPage(4)">Basketball</p>
-                                            <p class="like_amount" id="like_amount_4">27</p>
-                                            <img id="video_like" src="img/liked.png" onclick="addfunction(4)">
+                                            <p id="video_title">Basketball</p>
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="video_box" style="margin-left:20px;">
+                                    <td id="video_box">
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
+                                        </div>
+                                    </td>
+                                    <td id="video_box" style="margin-left:20px;">
+                                        <div id="video" onclick="playVideo()"></div>
+                                        <div id="video_info">
+                                            <p id="video_title">Basketball</p>
+                                            <p id="like_amount">27</p>
+                                            <img id="video_like" src="img/liked.png">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="video_box">
                                         <div id="add_video" onclick="addVideo()">
                                             <p>+</p>
                                         </div>
@@ -1863,49 +1875,34 @@
                     </li>
 
                     <li id="tab_calendar" name="tab">
-                        <div id="calendar">
+                        <div id="calendar_box">
+                            <!-- [DATE SELECTOR] -->
+                            <div id="selector">
+                                <select id="month"></select>
+                                <select id="year"></select>
+                                <input type="button" value="SET" onclick="cal.list()" />
+                            </div>
 
+                            <!-- [CALENDAR] -->
+                            <div id="container"></div>
                         </div>
                         <div id="event_list">
+                            <div id="add_event_button">
+                                <p id="add_button" onclick="addEvent()">Add New Event</p>
+                                <p id="chosen_date">Chosen Date</p>
+                            </div>
+
                             <form>
-                                <table id="event_list_table">
+                                <table id="event_list_table_title">
                                     <tr>
                                         <td id="event_title">Event1</td>
-                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_connect">--</td>
-                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_button"><input type="button" value="Delete"></td>
+                                        <td id="event_start_date">Start-Time</td>
+                                        <td id="event_connect">&nbsp;&nbsp;</td>
+                                        <td id="event_end_date">End-Time</td>
+                                        <td id="event_button">Process</td>
                                     </tr>
-                                    <tr>
-                                        <td id="event_title">Event2</td>
-                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_connect">--</td>
-                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_button"><input type="button" value="Delete"></td>
-                                    </tr>
-                                    <tr>
-                                        <td id="event_title">Event3</td>
-                                        <td id="event_start_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_connect">--</td>
-                                        <td id="event_end_date">2019-01-23 09:01 A.M.</td>
-                                        <td id="event_button"><input type="button" value="Delete"></td>
-                                    </tr>
-                                    <tr>
-                                        <td id="event_page" colspan="4">
-                                            <div id="page_box">
-                                                <div id="page">
-                                                    <input onclick="prev(2)" value="↢">
-                                                    &nbsp;&nbsp;<div id="cur">3</div>&nbsp;&nbsp;/&nbsp;&nbsp;<div
-                                                        style="font-size:15px;font-weight:bold;display:inline;margin-left:0px;"
-                                                        id="all">all</div>&nbsp;&nbsp;
-                                                    <input onclick="next(2)" value="↣">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td id="add_event_button">
-                                            <input type="button" value="New Event" onclick="addEvent()">
-                                        </td>
-                                    </tr>
+                                </table>
+                                <table id="event_list_table">
                                 </table>
                             </form>
                         </div>
@@ -1917,7 +1914,8 @@
                                     <tbody id="course_table">
                                         <tr>
                                             <td id="course_table_title_title" style="font-size:18px;">Subject</td>
-                                            <td id="course_table_tutorName_title" style="font-size:18px;">Paired-User</td>
+                                            <td id="course_table_tutorName_title" style="font-size:18px;">Paired-User
+                                            </td>
                                             <td id="course_table_date_title" style="font-size:18px;">Course Time</td>
                                             <td id="course_table_button_title" style="font-size:18px;">Process</td>
                                         </tr>
@@ -1969,16 +1967,17 @@
                         </td>
                     </tr>
                     <tr id="mask_video_category">
-                        <td><input type="text" id="category" placeholder="Enter the category of this video"></td></td>
+                        <td><input type="text" placeholder="Enter the category of this video"></td>
                     </tr>
                     <tr id="mask_video_url">
                         <td>
-                            <input type="file" value="upload" id="fileButton" style="margin-left:50px;margin-top:5px;"/>
+                            <input id="url" type="url">
+                            <input id="choose" type="button" value="Choose">
                         </td>
                     </tr>
                     <tr id="mask_video_button">
                         <td>
-                            <input id="mask_button" type="button" value="Submit" onclick="submitButton()" style="margin-left:45px;">
+                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
                             <input id="mask_button" type="button" value="Cancel" style="margin-left:30px"
                                 onclick="quit()">
                         </td>
@@ -1997,19 +1996,22 @@
                 <table id="mask_calendar_table">
                     <tr id="mask_calendar_title">
                         <td id="add_event_title">Event</td>
-                        <td id="add_event_event" colspan="2"><input type="text"></td>
+                        <td id="add_event_event" colspan="2"><input id="new_event_title" type="text"></td>
                     </tr>
                     <tr id="mask_calendar_start">
                         <td id="add_event_title">Start Time</td>
-                        <td id="add_event_time"><input name="add_event_end_time" type="datetime-local"></td>
+                        <td id="add_event_time"><span id="new_event_start_date"></span><input id="new_event_start_time"
+                                type="time"></td>
                     </tr>
                     <tr id="mask_calendar_end">
                         <td id="add_event_title">End Time</td>
-                        <td id="add_event_time"><input name="add_event_end_time" type="datetime-local"></td>
+                        <td id="add_event_time"><span id="new_event_end_date"></span><input id="new_event_end_time"
+                                type="time"></td>
                     </tr>
                     <tr id="mask_calendar_button">
                         <td colspan="2">
-                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;">
+                            <input id="mask_button" type="button" value="Submit" style="margin-left:45px;"
+                                onclick="add_event()">
                             <input id="mask_button" type="button" value="Cancel" style="margin-left:30px"
                                 onclick="quit()">
                         </td>
@@ -2038,10 +2040,10 @@
         $("#mask_calendar").fadeOut(600);
     }
     function playVideo() {
-        window.location.href = 'video.html';
+        window.location.href = 'video.html?video_id = ' + video_id;
     }
 
-    var spans = document.getElementsByTagName('span');
+    var spans = document.getElementsByName('spans');
     var tabs = document.getElementsByName('tab');
     spans[0].style.display = 'block';
     spans[0].style.background = '#162f59';
@@ -2052,7 +2054,7 @@
     tabs[3].style.display = 'none';
 
     var quest = window.location.search.substr(12);
-    if(quest == "true") {
+    if (quest == "true") {
         spans[3].style.display = 'block';
         spans[3].style.background = '#162f59';
         spans[3].style.color = '#e5f2f8';
@@ -2068,7 +2070,7 @@
 
         spans[2].style.background = '';
         spans[2].style.color = '';
-        tabs[2].style.display = 'none';        
+        tabs[2].style.display = 'none';
     }
 
     spans[0].onclick = function () {
@@ -2161,7 +2163,7 @@
         }
         // window.location.href="calendar.action?cur="+cur;
     }
-    
+
     function next(num) {
         var cur = parseInt($("#cur").html());
         var all = parseInt($("#all").html());
@@ -2174,58 +2176,25 @@
         }
         // window.location.href="calendar.action?cur="+cur;
     }
-    
-    function goVideoPage(){
-        var category = 'video_title_' + arguments[0];
-        var video_category = document.getElementById(category).innerHTML;
-        
-        window.location='video.html?video_id=' + video_category;
-    }
 
-    function goTutorPage(tutor_id){
-        window.location='user.html?tutor_id=' + tutor_id;
+    function goTutorPage(tutor_id) {
+        window.location = 'user.html?tutor_id=' + tutor_id;
     }
-    function goCourse(course_id, course_name, tutor_id, tutor_name){
-        window.location='course.html?course_id=' + course_id + "&course_name=" + course_name + "&tutor_id=" + tutor_id + "&tutor_name=" + tutor_name;
+    function goCourse(course_id, course_name, tutor_id, tutor_name) {
+        window.location = 'index.html?course_id=' + course_id + "&course_name=" + course_name + "&tutor_id=" + tutor_id + "&tutor_name=" + tutor_name;
     }
-    function goRate(tutor_id, course_name, course_date){
-        window.location='rate.html?tutor_id=' + tutor_id + "&course_name=" + course_name + "&course_date=" + course_date;
+    function goRate(tutor_id, course_name, course_date) {
+        window.location = 'rate.html?tutor_id=' + tutor_id + "&course_name=" + course_name + "&course_date=" + course_date;
     }
     function cancelCourse(course_id) {
         var user = firebase.auth().currentUser;
         var courseRef = firestore.doc("course/" + course_id);
-        courseRef.delete().then(function() {
+        courseRef.delete().then(function () {
             alert("Cancelled successfully!");
             window.location.href = "personal.html?coursePage=" + "true";
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error("Error removing document: ", error);
         });
-    }
-    function submitButton()
-    {
-    function inputVideo(){
-    
-    var user = firebase.auth().currentUser;
-    var uid = user.uid;
-    const docVideo = firestore.collection("video").doc();
-    
-    var categ = document.getElementById('category').value;
-    
-    docVideo.set({
-         category : categ,
-         likes : 0,
-         url : "www.youtube.com",
-         user_id :uid
-        }).then(function () {
-            alert("Status saved");
-        }).catch(function (error) {
-            alert("Got an error: " + error);
-        });
-
-    };
-    inputVideo();
-    
-    quit();
     }
 
 
